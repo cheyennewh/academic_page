@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Neuron Network</title>
+  <title>Random Walk - 5 Segments</title>
   <style>
     body {
       background: #0b0c10;
@@ -10,141 +10,50 @@
       height: 100vh;
       overflow: hidden;
     }
-
     svg {
       width: 100vw;
       height: 100vh;
     }
-
-    .soma {
-      fill: url(#soma-gradient);
-      filter: drop-shadow(0 0 10px #1e90ff88);
-      transform-origin: center;
-    }
-
-    .dendrite {
-      fill: url(#branch-fill);
-      filter: drop-shadow(0 0 4px #1e90ff66);
-    }
-
-    .glow-path {
+    .segment {
+      stroke: #1e90ff;
+      stroke-width: 4;
       fill: none;
-      stroke: white;
-      stroke-width: 5;
-      stroke-linecap: round;
-      opacity: 0;
-      stroke-dasharray: 300;
     }
   </style>
 </head>
 <body>
-<svg viewBox="0 0 800 600">
-  <defs>
-    <radialGradient id="soma-gradient" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#80d0ff" />
-      <stop offset="100%" stop-color="#1e90ff" />
-    </radialGradient>
-
-    <linearGradient id="branch-fill" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#1e90ff" stop-opacity="1"/>
-      <stop offset="70%" stop-color="#1e90ff" stop-opacity="0.6"/>
-      <stop offset="100%" stop-color="#1e90ff" stop-opacity="0.2"/>
-    </linearGradient>
-  </defs>
-
-  <!-- Use JavaScript to dynamically generate neuron network -->
-</svg>
+<svg viewBox="0 0 800 600"></svg>
 
 <script>
 const svg = document.querySelector("svg");
-const numNeurons = 10;
 
-function random(min, max) {
-  return Math.random() * (max - min) + min;
-}
-
-function generateRandomWalk(x, y, segments = 5, step = 40) {
+function generateRandomWalk(x, y, segments = 5, step = 50) {
   const points = [{ x, y }];
   for (let i = 0; i < segments; i++) {
     const angle = Math.random() * Math.PI * 2;
-    x += Math.cos(angle) * step * (0.5 + Math.random());
-    y += Math.sin(angle) * step * (0.5 + Math.random());
+    x += Math.cos(angle) * step;
+    y += Math.sin(angle) * step;
     points.push({ x, y });
   }
   return points;
 }
 
-function pathFromPoints(points) {
-  if (points.length < 2) return "";
-  let d = `M${points[0].x},${points[0].y}`;
-  for (let i = 1; i < points.length - 1; i++) {
-    const midX = (points[i].x + points[i + 1].x) / 2;
-    const midY = (points[i].y + points[i + 1].y) / 2;
-    d += ` Q ${points[i].x},${points[i].y} ${midX},${midY}`;
+function drawSegments(points) {
+  for (let i = 0; i < points.length - 1; i++) {
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("class", "segment");
+    line.setAttribute("x1", points[i].x);
+    line.setAttribute("y1", points[i].y);
+    line.setAttribute("x2", points[i + 1].x);
+    line.setAttribute("y2", points[i + 1].y);
+    svg.appendChild(line);
   }
-  return d;
 }
 
-function createNeuron(id) {
-  const x = random(100, 700);
-  const y = random(100, 500);
-  const r = random(25, 45);
-  const pulseDelay = random(0, 5);
-
-  const soma = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  soma.setAttribute("class", "soma");
-  soma.setAttribute("cx", x);
-  soma.setAttribute("cy", y);
-  soma.setAttribute("r", r);
-  soma.style.animation = `soma-pulse 3s ${pulseDelay}s infinite ease-in-out`;
-  svg.appendChild(soma);
-
-  const dendrite = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  dendrite.setAttribute("class", "dendrite");
-
-  const points = generateRandomWalk(x, y);
-  const pathData = pathFromPoints(points);
-
-  dendrite.setAttribute("d", pathData + ` L ${x + 5},${y + 5} Z`);
-  svg.appendChild(dendrite);
-
-  const glow = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  glow.setAttribute("class", "glow-path");
-  glow.setAttribute("d", pathData);
-  glow.style.animation = `signal-pulse 4s ${pulseDelay}s infinite`;
-  svg.appendChild(glow);
-}
-
-for (let i = 0; i < numNeurons; i++) {
-  createNeuron(i);
-}
+const startX = 400;
+const startY = 300;
+const walkPoints = generateRandomWalk(startX, startY);
+drawSegments(walkPoints);
 </script>
-
-<style>
-@keyframes soma-pulse {
-  0%, 100% {
-    transform: scale(1);
-    filter: drop-shadow(0 0 10px #1e90ff88);
-  }
-  50% {
-    transform: scale(1.05);
-    filter: drop-shadow(0 0 30px #1e90ffcc);
-  }
-}
-
-@keyframes signal-pulse {
-  0% {
-    stroke-dashoffset: 300;
-    opacity: 0;
-  }
-  20% {
-    opacity: 1;
-  }
-  100% {
-    stroke-dashoffset: 0;
-    opacity: 0;
-  }
-}
-</style>
 </body>
 </html>
