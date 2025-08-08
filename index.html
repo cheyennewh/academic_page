@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name - Cognitive Neuroscience Researcher</title>
+    <title>Dr. Your Name - Cognitive Neuroscience Researcher</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -12,223 +12,345 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --cream: #f5f5dc;
+            --light-yellow: #f0e68c;
+            --warm-orange: #daa520;
+            --coral: #cd5c5c;
+            --crimson: #b22222;
+            --burgundy: #800020;
+            --deep-purple: #4b0082;
+            --dark-purple: #2e1065;
+        }
+
         body {
-            font-family: 'Georgia', serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--dark-purple);
+            background: linear-gradient(135deg, var(--cream) 0%, var(--light-yellow) 100%);
             min-height: 100vh;
+            position: relative;
+        }
+
+        /* Neural Network Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(218, 165, 32, 0.1) 2px, transparent 3px),
+                radial-gradient(circle at 80% 20%, rgba(205, 92, 92, 0.1) 1px, transparent 2px),
+                radial-gradient(circle at 40% 70%, rgba(128, 0, 32, 0.1) 1px, transparent 2px),
+                radial-gradient(circle at 90% 80%, rgba(75, 0, 130, 0.1) 2px, transparent 3px),
+                radial-gradient(circle at 10% 90%, rgba(178, 34, 34, 0.1) 1px, transparent 2px);
+            z-index: -2;
+        }
+
+        /* Neural Network Connections */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, transparent 48%, rgba(218, 165, 32, 0.1) 49%, rgba(218, 165, 32, 0.1) 51%, transparent 52%),
+                linear-gradient(-45deg, transparent 48%, rgba(205, 92, 92, 0.1) 49%, rgba(205, 92, 92, 0.1) 51%, transparent 52%),
+                linear-gradient(135deg, transparent 48%, rgba(128, 0, 32, 0.1) 49%, rgba(128, 0, 32, 0.1) 51%, transparent 52%);
+            background-size: 200px 200px, 300px 300px, 150px 150px;
+            animation: networkFlow 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes networkFlow {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-50px, -50px); }
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-            overflow: hidden;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
         }
 
-        .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            color: grey;
-            padding: 3rem 2rem;
+        .hero-section {
             text-align: center;
+            margin-bottom: 3rem;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--warm-orange) 50%, var(--coral) 100%);
+            border-radius: 30px;
+            border: 4px solid transparent;
+            background-clip: padding-box;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 20px 40px rgba(75, 0, 130, 0.2);
         }
 
-        .header::before {
+        .hero-section::before {
             content: '';
+            position: absolute;
+            inset: 0;
+            padding: 4px;
+            background: linear-gradient(45deg, var(--warm-orange), var(--coral), var(--crimson), var(--burgundy), var(--deep-purple));
+            border-radius: 30px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+        }
+
+        /* Neuron SVG Background */
+        .neuron-bg {
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.1)" points="0,0 1000,300 1000,1000 0,700"/></svg>');
-            background-size: cover;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: 1;
         }
 
-        .profile-content {
+        .hero-content {
             position: relative;
             z-index: 2;
         }
 
-        .profile-img {
+        .profile-photo {
             width: 200px;
             height: 200px;
             border-radius: 50%;
-            border: 5px solid rgba(255,255,255,0.2);
             margin: 0 auto 2rem;
-            background: #ddd;
+            background: linear-gradient(135deg, var(--burgundy), var(--deep-purple));
+            border: 5px solid var(--dark-purple);
+            box-shadow: 0 15px 35px rgba(46, 16, 101, 0.3);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            color: #999;
+            font-size: 4rem;
+            color: var(--cream);
+            position: relative;
+            overflow: hidden;
         }
 
-        .name {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .profile-photo::before {
+            content: '';
+            position: absolute;
+            inset: -15px;
+            border: 2px solid var(--coral);
+            border-radius: 50%;
+            border-style: dashed;
+            animation: rotate 20s linear infinite;
         }
 
-        .title {
-            font-size: 1.2rem;
-            opacity: 0.9;
+        .profile-photo::after {
+            content: '';
+            position: absolute;
+            inset: -25px;
+            border: 1px solid var(--warm-orange);
+            border-radius: 50%;
+            border-style: dotted;
+            animation: rotate 15s linear infinite reverse;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
             margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--dark-purple), var(--deep-purple), var(--burgundy));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.6rem;
+            color: var(--burgundy);
+            margin-bottom: 2rem;
+            font-weight: 600;
         }
 
         .social-links {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
+            gap: 1.5rem;
+            flex-wrap: wrap;
         }
 
         .social-links a {
-            color: white;
+            display: inline-block;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--coral), var(--crimson));
+            border: 3px solid var(--burgundy);
+            border-radius: 20px;
+            color: var(--cream);
             font-size: 1.5rem;
-            padding: 0.5rem;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.2);
-            transition: all 0.3s ease;
             text-decoration: none;
+            transition: all 0.4s ease;
+            box-shadow: 0 8px 20px rgba(178, 34, 34, 0.3);
+            position: relative;
         }
 
         .social-links a:hover {
-            background: rgba(255,255,255,0.3);
-            transform: translateY(-2px);
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 15px 30px rgba(178, 34, 34, 0.4);
+            background: linear-gradient(135deg, var(--crimson), var(--burgundy));
         }
 
-        .nav {
-            background: rgba(52, 73, 94, 0.1);
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .nav a {
-            padding: 1rem 2rem;
-            text-decoration: none;
-            color: #2c3e50;
-            font-weight: 500;
-            transition: all 0.3s ease;
+        .content-card {
+            background: linear-gradient(135deg, rgba(245, 245, 220, 0.9) 0%, rgba(240, 230, 140, 0.9) 100%);
+            backdrop-filter: blur(10px);
+            margin-bottom: 3rem;
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(75, 0, 130, 0.15);
+            border: 3px solid transparent;
+            background-clip: padding-box;
             position: relative;
         }
 
-        .nav a:hover, .nav a.active {
-            background: #3498db;
-            color: white;
-        }
-
-        .nav a::after {
+        .content-card::before {
             content: '';
             position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 0;
-            height: 3px;
-            background: #3498db;
-            transition: all 0.3s ease;
-            transform: translateX(-50%);
+            inset: 0;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--warm-orange), var(--coral), var(--crimson), var(--burgundy), var(--deep-purple));
+            border-radius: 25px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
         }
 
-        .nav a:hover::after {
-            width: 100%;
+        .content-card:nth-child(even)::before {
+            background: linear-gradient(-135deg, var(--deep-purple), var(--burgundy), var(--crimson), var(--coral), var(--warm-orange));
         }
 
-        .content {
-            padding: 3rem 2rem;
-        }
-
-        .section {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .section h2 {
-            color: #2c3e50;
+        .content-card h2 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--burgundy), var(--deep-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 2rem;
-            font-size: 2rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .section h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(135deg, #3498db, #9b59b6);
-            border-radius: 2px;
-        }
-
-        .research-item, .teaching-item, .presentation-item {
-            background: rgba(255,255,255,0.8);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border-radius: 15px;
-            border-left: 5px solid #3498db;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-
-        .research-item:hover, .teaching-item:hover, .presentation-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        }
-
-        .research-item h3, .teaching-item h3, .presentation-item h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
-        }
-
-        .research-item .meta, .teaching-item .meta, .presentation-item .meta {
-            color: #7f8c8d;
-            font-style: italic;
-            margin-bottom: 1rem;
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .skill-category {
-            background: rgba(255,255,255,0.8);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .skill-category h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1rem;
+            font-weight: 700;
+        }
+
+        .content-card p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--dark-purple);
+            font-weight: 500;
+        }
+
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .research-item {
+            background: linear-gradient(135deg, rgba(245, 245, 220, 0.95) 0%, rgba(218, 165, 32, 0.1) 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 4px solid var(--coral);
+            border-style: solid dashed solid dashed;
+            box-shadow: 0 10px 25px rgba(205, 92, 92, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .research-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(205, 92, 92, 0.3);
+            border-color: var(--burgundy);
+        }
+
+        /* Neural Network Nodes */
+        .research-item::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 16px;
+            height: 16px;
+            background: var(--crimson);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(245, 245, 220, 1), 0 0 0 8px var(--coral);
+        }
+
+        .research-item::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: -8px;
+            width: 12px;
+            height: 12px;
+            background: var(--deep-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px rgba(245, 245, 220, 1), 0 0 0 6px var(--burgundy);
+        }
+
+        .research-item h3 {
+            color: var(--dark-purple);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .meta {
+            color: var(--burgundy);
+            font-style: italic;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+        }
+
+        .skill-box {
+            background: linear-gradient(135deg, rgba(205, 92, 92, 0.1) 0%, rgba(128, 0, 32, 0.1) 100%);
+            padding: 2.5rem;
+            border: 5px ridge var(--coral);
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(75, 0, 130, 0.15);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .skill-box:hover {
+            border-style: groove;
+            border-color: var(--burgundy);
+            transform: scale(1.02);
+            background: linear-gradient(135deg, rgba(178, 34, 34, 0.1) 0%, rgba(75, 0, 130, 0.1) 100%);
+        }
+
+        .skill-box h3 {
+            background: linear-gradient(135deg, var(--crimson), var(--deep-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
         }
 
         .skill-list {
@@ -236,297 +358,272 @@
         }
 
         .skill-list li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 1rem 0;
+            border-bottom: 2px dotted var(--coral);
+            color: var(--dark-purple);
+            font-weight: 600;
+            position: relative;
+        }
+
+        .skill-list li::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            width: 6px;
+            height: 6px;
+            background: var(--crimson);
+            border-radius: 50%;
+            transform: translateY(-50%);
         }
 
         .skill-list li:last-child {
             border-bottom: none;
         }
 
-        .contact-info {
+        .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
         }
 
-        .contact-card {
-            background: rgba(255,255,255,0.8);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .contact-box {
+            background: linear-gradient(135deg, rgba(245, 245, 220, 0.9) 0%, rgba(218, 165, 32, 0.2) 100%);
+            padding: 3rem;
             text-align: center;
+            border: 4px outset var(--warm-orange);
+            border-radius: 22px;
+            box-shadow: 0 12px 30px rgba(218, 165, 32, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
         }
 
-        .contact-card i {
-            font-size: 2rem;
-            color: #3498db;
-            margin-bottom: 1rem;
+        .contact-box:hover {
+            border-style: inset;
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(218, 165, 32, 0.3);
         }
 
-        .btn {
+        .contact-box i {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--coral), var(--burgundy));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-neural {
             display: inline-block;
-            padding: 0.75rem 2rem;
-            background: linear-gradient(135deg, #3498db, #9b59b6);
-            color: white;
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--crimson), var(--deep-purple));
+            color: var(--cream);
             text-decoration: none;
-            border-radius: 25px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            margin-top: 1rem;
+            border: 3px solid var(--dark-purple);
+            border-radius: 30px;
+            font-weight: 700;
+            transition: all 0.4s ease;
+            margin-top: 1.5rem;
+            box-shadow: 0 8px 25px rgba(75, 0, 130, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .btn-neural:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(75, 0, 130, 0.4);
+            background: linear-gradient(135deg, var(--burgundy), var(--dark-purple));
+        }
+
+        /* Synaptic Connections */
+        .synapse-animation {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--coral);
+            border-radius: 50%;
+            animation: synapse 3s ease-in-out infinite;
+        }
+
+        .synapse-animation:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .synapse-animation:nth-child(2) { top: 30%; right: 15%; animation-delay: 1s; }
+        .synapse-animation:nth-child(3) { bottom: 25%; left: 20%; animation-delay: 2s; }
+
+        @keyframes synapse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            50% { 
+                transform: scale(1.5);
+                opacity: 1;
+                box-shadow: 0 0 20px var(--coral);
+            }
         }
 
         @media (max-width: 768px) {
             .container {
-                margin: 1rem;
-                border-radius: 15px;
-            }
-            
-            .name {
-                font-size: 2rem;
-            }
-            
-            .nav {
-                flex-direction: column;
-            }
-            
-            .nav a {
                 padding: 1rem;
-                text-align: center;
             }
             
-            .content {
-                padding: 2rem 1rem;
+            .hero-title {
+                font-size: 2.5rem;
             }
             
-            .profile-img {
+            .hero-subtitle {
+                font-size: 1.3rem;
+            }
+            
+            .profile-photo {
                 width: 150px;
                 height: 150px;
+                font-size: 3rem;
+            }
+            
+            .content-card {
+                padding: 2rem;
+            }
+            
+            .research-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <div class="profile-content">
-                <div class="profile-img">
-                    <i class="fas fa-user"></i>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="synapse-animation"></div>
+            <div class="synapse-animation"></div>
+            <div class="synapse-animation"></div>
+            <svg class="neuron-bg" viewBox="0 0 800 400">
+                <defs>
+                    <linearGradient id="neuronGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#daa520;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#4b0082;stop-opacity:0.3" />
+                    </linearGradient>
+                </defs>
+                <!-- Neuron structure -->
+                <circle cx="200" cy="200" r="30" fill="url(#neuronGrad)" opacity="0.6"/>
+                <circle cx="600" cy="150" r="25" fill="url(#neuronGrad)" opacity="0.6"/>
+                <circle cx="400" cy="300" r="20" fill="url(#neuronGrad)" opacity="0.6"/>
+                <!-- Dendrites/Axons -->
+                <path d="M230,200 Q350,100 570,150" stroke="url(#neuronGrad)" stroke-width="3" fill="none" opacity="0.5"/>
+                <path d="M200,230 Q300,350 380,300" stroke="url(#neuronGrad)" stroke-width="2" fill="none" opacity="0.5"/>
+                <path d="M620,160 Q500,200 420,290" stroke="url(#neuronGrad)" stroke-width="2" fill="none" opacity="0.5"/>
+            </svg>
+            <div class="hero-content">
+                <div class="profile-photo">
+                    <i class="fas fa-brain"></i>
                 </div>
-                <h1 class="name">Your Name</h1>
-                <p class="title">Doctoral Researcher in Cognitive Neuroscience</p>
-                <p>Columbia University Psychology Department</p>
-                
+                <h1 class="hero-title">Dr. Your Name</h1>
+                <p class="hero-subtitle">Cognitive Neuroscience Researcher</p>
+                <p style="font-size: 1.3rem; color: var(--burgundy); margin-bottom: 2rem; font-weight: 600;">
+                    Exploring the neural networks of cognition and consciousness
+                </p>
                 <div class="social-links">
-                    <a href="mailto:your.email@columbia.edu" title="Email"><i class="fas fa-envelope"></i></a>
-                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
-                    <a href="#" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
-                    <a href="#" title="ORCID"><i class="fab fa-orcid"></i></a>
-                    <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fas fa-envelope"></i></a>
                 </div>
             </div>
-        </header>
+        </section>
 
-        <nav class="nav">
-            <a href="#about" class="nav-link active" onclick="showSection('about')">About</a>
-            <a href="#research" class="nav-link" onclick="showSection('research')">Research</a>
-            <a href="#teaching" class="nav-link" onclick="showSection('teaching')">Teaching</a>
-            <a href="#presentations" class="nav-link" onclick="showSection('presentations')">Presentations</a>
-            <a href="#skills" class="nav-link" onclick="showSection('skills')">Skills</a>
-            <a href="#contact" class="nav-link" onclick="showSection('contact')">Contact</a>
-        </nav>
+        <!-- About Section -->
+        <div class="content-card">
+            <h2><i class="fas fa-project-diagram"></i> Research Philosophy</h2>
+            <p>I investigate the intricate neural mechanisms underlying human cognition, focusing on how networks of neurons give rise to complex behaviors like memory formation, attention regulation, and decision-making processes.</p>
+            <p>My approach combines advanced neuroimaging techniques with computational modeling to understand how information flows through neural circuits and how these patterns change with learning, aging, and neurological conditions.</p>
+        </div>
 
-        <main class="content">
-            <section id="about" class="section active">
-                <h2>About Me</h2>
-                <p>I am a doctoral researcher in the Psychology Department at Columbia University, specializing in cognitive neuroscience and memory research. My work focuses on understanding the neural mechanisms underlying human cognition, with particular interests in memory processes, attention, and brain-behavior relationships.</p>
-                
-                <p>Prior to my doctoral studies, I conducted research at the University of Chicago, where I worked in multiple laboratories including the Memory Lab, Cognition Attention and Brain Lab (CAB Lab), and Brain Bridge Lab. This diverse research experience has provided me with a comprehensive understanding of cognitive processes from multiple perspectives.</p>
-                
-                <p>Beyond research, I am passionate about teaching and have extensive experience as both a teaching assistant and guest lecturer across various psychology courses. I also serve in leadership roles within the department and broader academic community.</p>
-                
-                <a href="#" class="btn">Download CV</a>
-            </section>
-
-            <section id="research" class="section">
-                <h2>Research Projects</h2>
-                
+        <!-- Research Section -->
+        <div class="content-card">
+            <h2><i class="fas fa-network-wired"></i> Current Research</h2>
+            <p>Active investigations into the neural basis of cognition:</p>
+            
+            <div class="research-grid">
                 <div class="research-item">
-                    <h3>Predicting Memorability</h3>
-                    <p class="meta">Ongoing • Computational Neuroscience</p>
-                    <p>Investigating the factors that make certain information more memorable than others using computational modeling and neuroimaging techniques. This research aims to understand the neural basis of memory formation and retrieval.</p>
+                    <h3>Neural Network Dynamics in Working Memory</h3>
+                    <div class="meta">2023 - Present | Principal Investigator</div>
+                    <p>Examining how distributed brain networks coordinate to maintain and manipulate information in working memory using high-resolution fMRI and EEG.</p>
                 </div>
-                
                 <div class="research-item">
-                    <h3>Predicting Memory</h3>
-                    <p class="meta">Ongoing • Cognitive Psychology</p>
-                    <p>Developing predictive models of memory performance using behavioral and physiological measures. The project combines machine learning approaches with traditional experimental psychology methods.</p>
+                    <h3>Attention Networks Across the Lifespan</h3>
+                    <div class="meta">2022 - 2024 | Co-Investigator</div>
+                    <p>Longitudinal study tracking changes in attention network connectivity and efficiency from young adulthood through aging.</p>
                 </div>
-                
                 <div class="research-item">
-                    <h3>Music Recommendation Model</h3>
-                    <p class="meta">Completed • Data Science Application</p>
-                    <p>Created a machine learning model for personalized music recommendations, applying principles from cognitive psychology to understand individual preferences and listening patterns.</p>
+                    <h3>Synaptic Plasticity in Learning</h3>
+                    <div class="meta">2021 - 2023 | Research Fellow</div>
+                    <p>Investigating how synaptic connections strengthen and reorganize during skill acquisition and memory consolidation.</p>
                 </div>
-                
-                <div class="research-item">
-                    <h3>tDCS Research</h3>
-                    <p class="meta">Ongoing • Neurostimulation</p>
-                    <p>Investigating the effects of transcranial direct current stimulation (tDCS) on cognitive performance and neural activity, with applications for understanding brain plasticity and potential therapeutic interventions.</p>
-                </div>
-            </section>
+            </div>
+        </div>
 
-            <section id="teaching" class="section">
-                <h2>Teaching Experience</h2>
-                
-                <div class="teaching-item">
-                    <h3>Lead Teaching Fellow</h3>
-                    <p class="meta">Columbia Teaching and Learning (CTL)</p>
-                    <p>Mentor and support teaching assistants across the psychology department, providing pedagogical training and classroom management strategies.</p>
+        <!-- Skills Section -->
+        <div class="content-card">
+            <h2><i class="fas fa-sitemap"></i> Expertise & Methods</h2>
+            <p>Technical skills spanning neuroscience research methodologies:</p>
+            
+            <div class="skills-container">
+                <div class="skill-box">
+                    <h3><i class="fas fa-brain"></i> Neuroscience</h3>
+                    <ul class="skill-list">
+                        <li>fMRI & DTI Analysis</li>
+                        <li>EEG/MEG Processing</li>
+                        <li>Neural Network Modeling</li>
+                        <li>Connectivity Analysis</li>
+                    </ul>
                 </div>
-                
-                <div class="teaching-item">
-                    <h3>Statistics for Behavioral Scientists</h3>
-                    <p class="meta">Teaching Assistant • Fall 2023</p>
-                    <p>Assisted students in understanding statistical concepts and their applications in psychological research, including hands-on experience with statistical software and data analysis.</p>
+                <div class="skill-box">
+                    <h3><i class="fas fa-chart-network"></i> Computational</h3>
+                    <ul class="skill-list">
+                        <li>Machine Learning</li>
+                        <li>Signal Processing</li>
+                        <li>Statistical Modeling</li>
+                        <li>Data Visualization</li>
+                    </ul>
                 </div>
-                
-                <div class="teaching-item">
-                    <h3>Cognition: Basic Processes</h3>
-                    <p class="meta">Teaching Assistant & Guest Lecturer • 2024</p>
-                    <p>Taught fundamental concepts in cognitive psychology, including attention, memory, perception, and decision-making processes.</p>
+                <div class="skill-box">
+                    <h3><i class="fas fa-code-branch"></i> Programming</h3>
+                    <ul class="skill-list">
+                        <li>Python (NumPy, SciPy)</li>
+                        <li>R & MATLAB</li>
+                        <li>FSL & SPM</li>
+                        <li>TensorFlow & PyTorch</li>
+                    </ul>
                 </div>
-                
-                <div class="teaching-item">
-                    <h3>Summer Research Program</h3>
-                    <p class="meta">Instructor • "Cognition: from Lab to Life!"</p>
-                    <p>Designed and delivered an intensive summer program connecting laboratory research in cognition to real-world applications and everyday experiences.</p>
-                </div>
-            </section>
+            </div>
+        </div>
 
-            <section id="presentations" class="section">
-                <h2>Conference Presentations</h2>
-                
-                <div class="presentation-item">
-                    <h3>Cognitive Neuroscience Society (CNS)</h3>
-                    <p class="meta">2023 • Poster Presentation</p>
-                    <p>Presented research findings on neural mechanisms of memory and cognition to an international audience of cognitive neuroscientists.</p>
+        <!-- Contact Section -->
+        <div class="content-card">
+            <h2><i class="fas fa-share-alt"></i> Connect & Collaborate</h2>
+            <p>Interested in neural networks, cognitive research, or potential collaborations?</p>
+            
+            <div class="contact-grid">
+                <div class="contact-box">
+                    <i class="fas fa-university"></i>
+                    <h3>Laboratory</h3>
+                    <p>Cognitive Neuroscience Lab<br>University Name<br>Neural Sciences Building</p>
                 </div>
-                
-                <div class="presentation-item">
-                    <h3>Vision Sciences Society (VSS)</h3>
-                    <p class="meta">2021 • Poster Presentation</p>
-                    <p>Shared research on visual perception and its relationship to cognitive processes with experts in vision science.</p>
+                <div class="contact-box">
+                    <i class="fas fa-envelope-open"></i>
+                    <h3>Email</h3>
+                    <p>your.email@university.edu</p>
+                    <a href="#" class="btn-neural">Send Message</a>
                 </div>
-                
-                <div class="presentation-item">
-                    <h3>Psychonomics Annual Meeting</h3>
-                    <p class="meta">2021 • Poster Presentation</p>
-                    <p>Presented findings on experimental psychology and cognitive processes to the broader experimental psychology community.</p>
+                <div class="contact-box">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>Office</h3>
+                    <p>+1 (555) 123-4567<br>Office Hours: Tu/Th 2-4pm</p>
                 </div>
-            </section>
-
-            <section id="skills" class="section">
-                <h2>Technical Skills & Expertise</h2>
-                
-                <div class="skills-grid">
-                    <div class="skill-category">
-                        <h3><i class="fas fa-code"></i> Programming</h3>
-                        <ul class="skill-list">
-                            <li>Python</li>
-                            <li>R</li>
-                            <li>MATLAB</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <h3><i class="fas fa-chart-line"></i> Analysis & Visualization</h3>
-                        <ul class="skill-list">
-                            <li>PsychoPy</li>
-                            <li>PyTorch</li>
-                            <li>TensorFlow</li>
-                            <li>GIS</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <h3><i class="fas fa-database"></i> Data Collection</h3>
-                        <ul class="skill-list">
-                            <li>Gorilla</li>
-                            <li>Prolific</li>
-                            <li>AWS</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="skill-category">
-                        <h3><i class="fas fa-brain"></i> Specialties</h3>
-                        <ul class="skill-list">
-                            <li>Statistical Modeling</li>
-                            <li>Bayesian Modeling</li>
-                            <li>Natural Language Processing</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-
-            <section id="contact" class="section">
-                <h2>Contact Information</h2>
-                
-                <div class="contact-info">
-                    <div class="contact-card">
-                        <i class="fas fa-envelope"></i>
-                        <h3>Email</h3>
-                        <p>your.email@columbia.edu</p>
-                    </div>
-                    
-                    <div class="contact-card">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <h3>Office</h3>
-                        <p>Columbia University<br>Psychology Department<br>New York, NY</p>
-                    </div>
-                    
-                    <div class="contact-card">
-                        <i class="fas fa-calendar-alt"></i>
-                        <h3>Office Hours</h3>
-                        <p>By appointment<br>Email to schedule</p>
-                    </div>
-                </div>
-            </section>
-        </main>
+            </div>
+        </div>
     </div>
-
-    <script>
-        function showSection(sectionId) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(section => section.classList.remove('active'));
-            
-            // Remove active class from all nav links
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => link.classList.remove('active'));
-            
-            // Show selected section
-            document.getElementById(sectionId).classList.add('active');
-            
-            // Add active class to clicked nav link
-            event.target.classList.add('active');
-        }
-
-        // Smooth scrolling for better UX
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                });
-            });
-        });
-    </script>
 </body>
 </html>
