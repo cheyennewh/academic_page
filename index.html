@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chey Wakeland-Hart - Cognitive Science Researcher</title>
+    <title>Dr. Your Name - Cognitive Neuroscience Researcher</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -13,8 +13,10 @@
         }
 
         :root {
+            --cream: #f5f5dc;
             --light-yellow: #f0e68c;
             --warm-orange: #daa520;
+            --coral: #cd5c5c;
             --crimson: #b22222;
             --burgundy: #800020;
             --deep-purple: #4b0082;
@@ -25,17 +27,9 @@
             font-family: 'Inter', 'Segoe UI', sans-serif;
             line-height: 1.6;
             color: var(--dark-purple);
-            background: linear-gradient(135deg, var(--deep-purple) 0%, var(--light-yellow) 100%);
+            background: linear-gradient(135deg, var(--cream) 0%, var(--light-yellow) 100%);
             min-height: 100vh;
             position: relative;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 2rem;
-            position: relative;
-            z-index: 1;
         }
 
         /* Neural Network Background */
@@ -76,7 +70,7 @@
         .neuron {
             width: 12px;
             height: 12px;
-            background: var(--light-yellow);
+            background: var(--coral);
             border-radius: 50%;
             position: relative;
             animation: pulse 3s ease-in-out infinite;
@@ -113,21 +107,130 @@
             z-index: -2;
         }
 
-        .hero-section {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 4rem 2rem;
-            background: var(--light-yellow);
-            border-radius: 30px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(205, 92, 92, 0.3);
-            color: var(--light-yellow);
+        /* Toolbar Styles */
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--dark-purple), var(--deep-purple));
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(46, 16, 101, 0.3);
+            backdrop-filter: blur(10px);
         }
 
-        .hero-content {
+        .toolbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--cream);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 0;
+            list-style: none;
+        }
+
+        .nav-item {
             position: relative;
-            z-index: 2;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 1rem 2rem;
+            color: var(--cream);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border-radius: 0;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--coral), var(--crimson));
+            transform: translateY(-2px);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: var(--coral);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link.active::after {
+            width: 80%;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--cream);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Page Container */
+        .page-container {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            position: relative;
+        }
+
+        .page {
+            display: none;
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Home Page Styles */
+        .hero-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: var(--coral);
+            border-radius: 30px;
+            color: var(--cream);
+            box-shadow: 0 20px 40px rgba(205, 92, 92, 0.3);
+            margin-bottom: 2rem;
         }
 
         .profile-photo {
@@ -136,13 +239,13 @@
             border-radius: 50%;
             margin: 0 auto 2rem;
             background: linear-gradient(135deg, var(--burgundy), var(--deep-purple));
-            border: 5px solid var(--light-yellow);
+            border: 5px solid var(--cream);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 4rem;
-            color: var(--light-yellow);
+            color: var(--cream);
             position: relative;
         }
 
@@ -150,7 +253,7 @@
             content: '';
             position: absolute;
             inset: -15px;
-            border: 2px dashed var(--light-yellow);
+            border: 2px dashed var(--cream);
             border-radius: 50%;
             animation: rotate 20s linear infinite;
             opacity: 0.7;
@@ -165,7 +268,6 @@
             font-size: 3.5rem;
             font-weight: 800;
             margin-bottom: 1rem;
-            color: var(--light-yellow);
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
@@ -181,76 +283,74 @@
             justify-content: center;
             gap: 1.5rem;
             flex-wrap: wrap;
+            margin-top: 2rem;
         }
 
         .social-links a {
             display: inline-block;
             padding: 1.2rem;
             background: rgba(245, 245, 220, 0.2);
-            border: 3px solid var(--light-yellow);
+            border: 3px solid var(--cream);
             border-radius: 20px;
-            color: var(--light-yellow);
+            color: var(--cream);
             font-size: 1.5rem;
             text-decoration: none;
             transition: all 0.4s ease;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
         .social-links a:hover {
             transform: translateY(-5px) scale(1.1);
             background: rgba(245, 245, 220, 0.3);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
-        .content-card {
+        /* Page Content Styles */
+        .page-header {
+            text-align: center;
             margin-bottom: 3rem;
-            padding: 3rem;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            position: relative;
+            padding: 2rem;
+            border-radius: 20px;
         }
 
-        .content-card:nth-child(2) {
+        .page-header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .page-header p {
+            font-size: 1.3rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        /* About Page */
+        #about-page .page-header {
             background: var(--warm-orange);
             color: var(--dark-purple);
         }
 
-        .content-card:nth-child(3) {
+        .about-content {
+            background: rgba(218, 165, 32, 0.1);
+            padding: 3rem;
+            border-radius: 25px;
+            border: 3px solid var(--warm-orange);
+        }
+
+        /* Research Page */
+        #research-page .page-header {
             background: var(--burgundy);
-            color: var(--light-yellow;
-        }
-
-        .content-card:nth-child(4) {
-            background: var(--deep-purple);
-            color: var(--light-yellow);
-        }
-
-        .content-card:nth-child(5) {
-            background: var(--crimson);
-            color: var(--light-yellow);
-        }
-
-        .content-card h2 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-weight: 700;
-        }
-
-        .content-card p {
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-            opacity: 0.95;
+            color: var(--cream);
         }
 
         .research-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: 2.5rem;
-            margin-top: 2.5rem;
+            margin-top: 2rem;
         }
 
         .research-item {
@@ -258,23 +358,22 @@
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             transition: all 0.4s ease;
-            position: relative;
             border: 3px solid rgba(255, 255, 255, 0.2);
         }
 
         .research-item:nth-child(1) {
-            background: var(--crimson);
-            color: var(--light-yellow);
+            background: var(--coral);
+            color: var(--cream);
         }
 
         .research-item:nth-child(2) {
             background: var(--deep-purple);
-            color: var(--light-yellow);
+            color: var(--cream);
         }
 
         .research-item:nth-child(3) {
-            background: var(--warm-orange);
-            color: var(--dark-purple);
+            background: var(--crimson);
+            color: var(--cream);
         }
 
         .research-item:hover {
@@ -283,24 +382,28 @@
         }
 
         .research-item h3 {
-            margin-bottom: 1rem;
             font-size: 1.5rem;
             font-weight: 700;
+            margin-bottom: 1rem;
         }
 
         .meta {
             font-style: italic;
             margin-bottom: 1rem;
-            font-size: 1rem;
-            font-weight: 600;
             opacity: 0.8;
+        }
+
+        /* Skills Page */
+        #skills-page .page-header {
+            background: var(--deep-purple);
+            color: var(--cream);
         }
 
         .skills-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2.5rem;
-            margin-top: 2.5rem;
+            margin-top: 2rem;
         }
 
         .skill-box {
@@ -308,12 +411,11 @@
             border-radius: 25px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             transition: all 0.4s ease;
-            position: relative;
         }
 
         .skill-box:nth-child(1) {
             background: var(--crimson);
-            color: var(--light-yellow);
+            color: var(--cream);
         }
 
         .skill-box:nth-child(2) {
@@ -322,22 +424,21 @@
         }
 
         .skill-box:nth-child(3) {
-            background: var(--burgundy);
-            color: var(--light-yellow);
+            background: var(--coral);
+            color: var(--cream);
         }
 
         .skill-box:hover {
-            transform: scale(1.02) translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transform: translateY(-8px);
         }
 
         .skill-box h3 {
-            margin-bottom: 1.5rem;
             font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            font-weight: 700;
         }
 
         .skill-list {
@@ -348,8 +449,8 @@
             padding: 1rem 0;
             border-bottom: 2px dotted rgba(255, 255, 255, 0.3);
             font-weight: 600;
-            position: relative;
             padding-left: 20px;
+            position: relative;
         }
 
         .skill-list li::before {
@@ -369,11 +470,17 @@
             border-bottom: none;
         }
 
+        /* Contact Page */
+        #contact-page .page-header {
+            background: var(--crimson);
+            color: var(--cream);
+        }
+
         .contact-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2.5rem;
-            margin-top: 2.5rem;
+            margin-top: 2rem;
         }
 
         .contact-box {
@@ -382,17 +489,16 @@
             border-radius: 22px;
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
             transition: all 0.4s ease;
-            position: relative;
         }
 
         .contact-box:nth-child(1) {
-            background: var(--crimson);
-            color: var(--light-yellow);
+            background: var(--coral);
+            color: var(--cream);
         }
 
         .contact-box:nth-child(2) {
             background: var(--deep-purple);
-            color: var(--light-yellow);
+            color: var(--cream);
         }
 
         .contact-box:nth-child(3) {
@@ -402,7 +508,6 @@
 
         .contact-box:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
         .contact-box i {
@@ -437,43 +542,61 @@
             transform: translateY(-4px);
             background: rgba(255, 255, 255, 0.3);
             border-color: rgba(255, 255, 255, 0.6);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
+        /* Mobile Styles */
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
+            .toolbar-content {
+                padding: 0 1rem;
             }
-            
+
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                left: 0;
+                right: 0;
+                background: var(--dark-purple);
+                flex-direction: column;
+                transform: translateY(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+            }
+
+            .nav-link {
+                padding: 1.5rem 2rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .page {
+                padding: 2rem 1rem;
+            }
+
             .hero-title {
                 font-size: 2.5rem;
             }
-            
-            .hero-subtitle {
-                font-size: 1.3rem;
-            }
-            
+
             .profile-photo {
                 width: 150px;
                 height: 150px;
                 font-size: 3rem;
             }
-            
-            .content-card {
-                padding: 2rem;
-            }
-            
-            .research-grid {
+
+            .research-grid,
+            .skills-container,
+            .contact-grid {
                 grid-template-columns: 1fr;
             }
 
-            .layer {
-                gap: 40px;
-            }
-
-            .neuron {
-                width: 8px;
-                height: 8px;
+            .page-header h1 {
+                font-size: 2.2rem;
             }
         }
     </style>
@@ -481,14 +604,12 @@
 <body>
     <!-- Neural Network Background -->
     <div id="neural-network-container">
-        <!-- Input Layer -->
         <div class="layer input-layer">
             <div class="neuron"></div>
             <div class="neuron"></div>
             <div class="neuron"></div>
             <div class="neuron"></div>
         </div>
-        <!-- Hidden Layer -->
         <div class="layer hidden-layer">
             <div class="neuron"></div>
             <div class="neuron"></div>
@@ -496,32 +617,55 @@
             <div class="neuron"></div>
             <div class="neuron"></div>
         </div>
-        <!-- Output Layer -->
         <div class="layer output-layer">
             <div class="neuron"></div>
             <div class="neuron"></div>
             <div class="neuron"></div>
         </div>
-        <!-- Connections SVG -->
         <svg id="connections-svg">
-            <!-- Input to Hidden connections -->
             <line x1="10%" y1="20%" x2="50%" y2="15%" stroke="var(--coral)" stroke-width="1" opacity="0.4"/>
             <line x1="10%" y1="35%" x2="50%" y2="25%" stroke="var(--burgundy)" stroke-width="1" opacity="0.4"/>
             <line x1="10%" y1="50%" x2="50%" y2="35%" stroke="var(--deep-purple)" stroke-width="1" opacity="0.4"/>
             <line x1="10%" y1="65%" x2="50%" y2="45%" stroke="var(--coral)" stroke-width="1" opacity="0.4"/>
             <line x1="10%" y1="80%" x2="50%" y2="55%" stroke="var(--burgundy)" stroke-width="1" opacity="0.4"/>
-            
-            <!-- Hidden to Output connections -->
             <line x1="50%" y1="25%" x2="90%" y2="30%" stroke="var(--deep-purple)" stroke-width="1" opacity="0.4"/>
             <line x1="50%" y1="35%" x2="90%" y2="50%" stroke="var(--coral)" stroke-width="1" opacity="0.4"/>
             <line x1="50%" y1="45%" x2="90%" y2="70%" stroke="var(--burgundy)" stroke-width="1" opacity="0.4"/>
         </svg>
     </div>
 
-    <div class="container">
-        <!-- Hero Section -->
-        <section class="hero-section">
-            <div class="hero-content">
+    <!-- Toolbar -->
+    <nav class="toolbar">
+        <div class="toolbar-content">
+            <a href="#" class="logo" onclick="showPage('home')">Dr. Neural</a>
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" onclick="showPage('home')">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showPage('about')">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showPage('research')">Research</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showPage('skills')">Skills</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showPage('contact')">Contact</a>
+                </li>
+            </ul>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Container -->
+    <div class="page-container">
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <section class="hero-section">
                 <div class="profile-photo">
                     <i class="fas fa-brain"></i>
                 </div>
@@ -536,21 +680,30 @@
                     <a href="#"><i class="fab fa-github"></i></a>
                     <a href="#"><i class="fas fa-envelope"></i></a>
                 </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <div class="content-card">
-            <h2><i class="fas fa-project-diagram"></i> Research Philosophy</h2>
-            <p>I investigate the intricate neural mechanisms underlying human cognition, focusing on how networks of neurons give rise to complex behaviors like memory formation, attention regulation, and decision-making processes.</p>
-            <p>My approach combines advanced neuroimaging techniques with computational modeling to understand how information flows through neural circuits and how these patterns change with learning, aging, and neurological conditions.</p>
+            </section>
         </div>
 
-        <!-- Research Section -->
-        <div class="content-card">
-            <h2><i class="fas fa-network-wired"></i> Current Research</h2>
-            <p>Active investigations into the neural basis of cognition:</p>
-            
+        <!-- About Page -->
+        <div id="about-page" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-user-graduate"></i> About Me</h1>
+                <p>Understanding the mind through neural computation</p>
+            </div>
+            <div class="about-content">
+                <p style="font-size: 1.3rem; margin-bottom: 2rem; color: var(--dark-purple); font-weight: 600;">I investigate the intricate neural mechanisms underlying human cognition, focusing on how networks of neurons give rise to complex behaviors like memory formation, attention regulation, and decision-making processes.</p>
+                
+                <p style="font-size: 1.2rem; margin-bottom: 2rem; color: var(--dark-purple);">My approach combines advanced neuroimaging techniques with computational modeling to understand how information flows through neural circuits and how these patterns change with learning, aging, and neurological conditions.</p>
+
+                <p style="font-size: 1.2rem; color: var(--dark-purple);">I believe that understanding the brain's computational principles will not only advance our knowledge of human cognition but also inform the development of more effective treatments for neurological and psychiatric disorders.</p>
+            </div>
+        </div>
+
+        <!-- Research Page -->
+        <div id="research-page" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-flask"></i> Research Projects</h1>
+                <p>Active investigations into the neural basis of cognition</p>
+            </div>
             <div class="research-grid">
                 <div class="research-item">
                     <h3>Neural Network Dynamics in Working Memory</h3>
@@ -570,11 +723,12 @@
             </div>
         </div>
 
-        <!-- Skills Section -->
-        <div class="content-card">
-            <h2><i class="fas fa-sitemap"></i> Expertise & Methods</h2>
-            <p>Technical skills spanning neuroscience research methodologies:</p>
-            
+        <!-- Skills Page -->
+        <div id="skills-page" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-cogs"></i> Expertise & Methods</h1>
+                <p>Technical skills spanning neuroscience research methodologies</p>
+            </div>
             <div class="skills-container">
                 <div class="skill-box">
                     <h3><i class="fas fa-brain"></i> Neuroscience</h3>
@@ -583,39 +737,43 @@
                         <li>EEG/MEG Processing</li>
                         <li>Neural Network Modeling</li>
                         <li>Connectivity Analysis</li>
+                        <li>Neuroimaging Statistics</li>
                     </ul>
                 </div>
                 <div class="skill-box">
-                    <h3><i class="fas fa-chart-network"></i> Computational</h3>
+                    <h3><i class="fas fa-chart-line"></i> Computational</h3>
                     <ul class="skill-list">
                         <li>Machine Learning</li>
                         <li>Signal Processing</li>
                         <li>Statistical Modeling</li>
                         <li>Data Visualization</li>
+                        <li>Time Series Analysis</li>
                     </ul>
                 </div>
                 <div class="skill-box">
-                    <h3><i class="fas fa-code-branch"></i> Programming</h3>
+                    <h3><i class="fas fa-code"></i> Programming</h3>
                     <ul class="skill-list">
                         <li>Python (NumPy, SciPy)</li>
                         <li>R & MATLAB</li>
                         <li>FSL & SPM</li>
                         <li>TensorFlow & PyTorch</li>
+                        <li>Git & Version Control</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Contact Section -->
-        <div class="content-card">
-            <h2><i class="fas fa-share-alt"></i> Connect & Collaborate</h2>
-            <p>Interested in neural networks, cognitive research, or potential collaborations?</p>
-            
+        <!-- Contact Page -->
+        <div id="contact-page" class="page">
+            <div class="page-header">
+                <h1><i class="fas fa-envelope"></i> Connect & Collaborate</h1>
+                <p>Interested in neural networks, cognitive research, or potential collaborations?</p>
+            </div>
             <div class="contact-grid">
                 <div class="contact-box">
                     <i class="fas fa-university"></i>
                     <h3>Laboratory</h3>
-                    <p>Cognitive Neuroscience Lab<br>University Name<br>Neural Sciences Building</p>
+                    <p>Cognitive Neuroscience Lab<br>University Name<br>Neural Sciences Building<br>Room 405</p>
                 </div>
                 <div class="contact-box">
                     <i class="fas fa-envelope-open"></i>
@@ -626,10 +784,48 @@
                 <div class="contact-box">
                     <i class="fas fa-phone-alt"></i>
                     <h3>Office</h3>
-                    <p>+1 (555) 123-4567<br>Office Hours: Tu/Th 2-4pm</p>
+                    <p>+1 (555) 123-4567<br>Office Hours:<br>Tuesday & Thursday<br>2:00 - 4:00 PM</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Remove active class from all nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            // Add active class to clicked nav link
+            event.target.classList.add('active');
+            
+            // Close mobile menu if open
+            document.getElementById('navMenu').classList.remove('active');
+        }
+
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const navMenu = document.getElementById('navMenu');
+            const mobileToggle = document.querySelector('.mobile-menu-toggle');
+            
+            if (!navMenu.contains(event.target) && !mobileToggle.contains(event.target)) {
+                navMenu.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
