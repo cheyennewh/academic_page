@@ -19,18 +19,7 @@
     .soma {
       fill: url(#soma-gradient);
       filter: drop-shadow(0 0 10px #1e90ff88);
-      animation: soma-pulse 3s infinite ease-in-out;
-    }
-
-    @keyframes soma-pulse {
-      0%, 100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 10px #1e90ff88);
-      }
-      50% {
-        transform: scale(1.05);
-        filter: drop-shadow(0 0 30px #1e90ffcc);
-      }
+      transform-origin: center;
     }
 
     .dendrite {
@@ -45,22 +34,6 @@
       stroke-linecap: round;
       opacity: 0;
       stroke-dasharray: 300;
-      stroke-dashoffset: 300;
-      animation: signal-pulse 4s infinite;
-    }
-
-    @keyframes signal-pulse {
-      0% {
-        stroke-dashoffset: 300;
-        opacity: 0;
-      }
-      20% {
-        opacity: 1;
-      }
-      100% {
-        stroke-dashoffset: 0;
-        opacity: 0;
-      }
     }
   </style>
 </head>
@@ -79,27 +52,89 @@
     </linearGradient>
   </defs>
 
-  <!-- Neuron 1 -->
-  <circle class="soma" cx="200" cy="300" r="40" />
-  <path class="dendrite" d="M200 300 C 150 250, 100 200, 60 160 L 65 165 C 105 205, 155 255, 200 300 Z" />
-  <path class="glow-path" d="M200 300 C 150 250, 100 200, 60 160" />
-
-  <!-- Neuron 2 -->
-  <circle class="soma" cx="500" cy="200" r="35" />
-  <path class="dendrite" d="M500 200 C 460 180, 400 180, 350 190 L 355 195 C 405 185, 465 185, 500 200 Z" />
-  <path class="glow-path" d="M500 200 C 460 180, 400 180, 350 190" />
-
-  <!-- Neuron 3 -->
-  <circle class="soma" cx="600" cy="450" r="38" />
-  <path class="dendrite" d="M600 450 C 550 400, 470 370, 420 390 L 425 395 C 475 375, 555 405, 600 450 Z" />
-  <path class="glow-path" d="M600 450 C 550 400, 470 370, 420 390" />
-
-  <!-- Neuron 4 -->
-  <circle class="soma" cx="300" cy="500" r="30" />
-  <path class="dendrite" d="M300 500 C 280 460, 260 420, 220 390 L 225 395 C 265 425, 285 465, 300 500 Z" />
-  <path class="glow-path" d="M300 500 C 280 460, 260 420, 220 390" />
-
+  <!-- Use JavaScript to dynamically generate neuron network -->
 </svg>
+
+<script>
+const svg = document.querySelector("svg");
+const numNeurons = 10;
+const neurons = [];
+
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function createNeuron(id) {
+  const x = random(100, 700);
+  const y = random(100, 500);
+  const r = random(25, 45);
+  const pulseDelay = random(0, 5);
+
+  // Soma
+  const soma = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  soma.setAttribute("class", "soma");
+  soma.setAttribute("cx", x);
+  soma.setAttribute("cy", y);
+  soma.setAttribute("r", r);
+  soma.style.animation = `soma-pulse 3s ${pulseDelay}s infinite ease-in-out`;
+  svg.appendChild(soma);
+
+  // Dendrite
+  const dendrite = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  dendrite.setAttribute("class", "dendrite");
+
+  // Random organic bezier path
+  const cp1x = x + random(-100, 100);
+  const cp1y = y + random(-100, 100);
+  const cp2x = x + random(-150, 150);
+  const cp2y = y + random(-150, 150);
+  const endX = x + random(-200, 200);
+  const endY = y + random(-200, 200);
+
+  const pathData = `M${x},${y} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${endX},${endY}
+                   L ${endX + 5},${endY + 5} C ${cp2x + 5},${cp2y + 5} ${cp1x + 5},${cp1y + 5} ${x + 5},${y + 5} Z`;
+  dendrite.setAttribute("d", pathData);
+  svg.appendChild(dendrite);
+
+  // Glow path
+  const glow = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  glow.setAttribute("class", "glow-path");
+  glow.setAttribute("d", `M${x},${y} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${endX},${endY}`);
+  glow.style.animation = `signal-pulse 4s ${pulseDelay}s infinite`;
+  svg.appendChild(glow);
+}
+
+for (let i = 0; i < numNeurons; i++) {
+  createNeuron(i);
+}
+</script>
+
+<style>
+@keyframes soma-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px #1e90ff88);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 30px #1e90ffcc);
+  }
+}
+
+@keyframes signal-pulse {
+  0% {
+    stroke-dashoffset: 300;
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+</style>
 </body>
 </html>
 
