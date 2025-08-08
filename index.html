@@ -2,68 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Organic Dendrite Shape</title>
+  <title>Neuron Network</title>
   <style>
     body {
       background: #0b0c10;
       margin: 0;
       height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .neuron-container {
-      position: relative;
-      width: 400px;
-      height: 400px;
-    }
-
-    .soma {
-      width: 120px;
-      height: 120px;
-      background: radial-gradient(circle, #80d0ff, #1e90ff);
-      border-radius: 50% 60% 45% 55% / 50% 40% 60% 50%;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      animation: pulse 2.5s infinite ease-in-out;
-      box-shadow: 0 0 30px rgba(30,144,255, 0.7);
-      z-index: 2;
-    }
-
-    @keyframes pulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-        box-shadow: 0 0 30px rgba(30,144,255, 0.6);
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.05);
-        box-shadow: 0 0 50px rgba(30,144,255, 1);
-      }
+      overflow: hidden;
     }
 
     svg {
-      position: absolute;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
     }
 
-    .dendrite-shape {
+    .soma {
+      fill: url(#soma-gradient);
+      filter: drop-shadow(0 0 10px #1e90ff88);
+      animation: soma-pulse 3s infinite ease-in-out;
+    }
+
+    @keyframes soma-pulse {
+      0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px #1e90ff88);
+      }
+      50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 30px #1e90ffcc);
+      }
+    }
+
+    .dendrite {
       fill: url(#branch-fill);
-      filter: drop-shadow(0 0 5px #1e90ff80);
+      filter: drop-shadow(0 0 4px #1e90ff66);
     }
 
     .glow-path {
       fill: none;
       stroke: white;
-      stroke-width: 8;
+      stroke-width: 5;
       stroke-linecap: round;
       opacity: 0;
       stroke-dasharray: 300;
       stroke-dashoffset: 300;
-      animation: signal-pulse 2s infinite;
+      animation: signal-pulse 4s infinite;
     }
 
     @keyframes signal-pulse {
@@ -71,7 +54,7 @@
         stroke-dashoffset: 300;
         opacity: 0;
       }
-      30% {
+      20% {
         opacity: 1;
       }
       100% {
@@ -82,38 +65,41 @@
   </style>
 </head>
 <body>
+<svg viewBox="0 0 800 600">
+  <defs>
+    <radialGradient id="soma-gradient" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#80d0ff" />
+      <stop offset="100%" stop-color="#1e90ff" />
+    </radialGradient>
 
-<div class="neuron-container">
-  <div class="soma"></div>
+    <linearGradient id="branch-fill" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e90ff" stop-opacity="1"/>
+      <stop offset="70%" stop-color="#1e90ff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#1e90ff" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
 
-  <svg viewBox="0 0 400 400">
-    <defs>
-      <!-- Organic gradient fill for the dendrite -->
-      <linearGradient id="branch-fill" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#1e90ff" />
-        <stop offset="70%" stop-color="#1e90ff" stop-opacity="0.6" />
-        <stop offset="100%" stop-color="#1e90ff" stop-opacity="0.2" />
-      </linearGradient>
-    </defs>
+  <!-- Neuron 1 -->
+  <circle class="soma" cx="200" cy="300" r="40" />
+  <path class="dendrite" d="M200 300 C 150 250, 100 200, 60 160 L 65 165 C 105 205, 155 255, 200 300 Z" />
+  <path class="glow-path" d="M200 300 C 150 250, 100 200, 60 160" />
 
-    <!-- Organic SHAPE, not stroke: this is a filled path -->
-    <path class="dendrite-shape"
-          d="M200 200 
-             C 180 180, 130 150, 100 100 
-             C 80 80, 60 60, 50 50
-             L 54 54 
-             C 64 64, 84 84, 104 104
-             C 134 134, 174 174, 200 200
-             Z" />
+  <!-- Neuron 2 -->
+  <circle class="soma" cx="500" cy="200" r="35" />
+  <path class="dendrite" d="M500 200 C 460 180, 400 180, 350 190 L 355 195 C 405 185, 465 185, 500 200 Z" />
+  <path class="glow-path" d="M500 200 C 460 180, 400 180, 350 190" />
 
-    <!-- Glow pulse along a curved centerline (same shape, but not closed) -->
-    <path class="glow-path"
-          d="M200 200 
-             C 180 180, 130 150, 100 100 
-             C 80 80, 60 60, 50 50" />
-  </svg>
-</div>
+  <!-- Neuron 3 -->
+  <circle class="soma" cx="600" cy="450" r="38" />
+  <path class="dendrite" d="M600 450 C 550 400, 470 370, 420 390 L 425 395 C 475 375, 555 405, 600 450 Z" />
+  <path class="glow-path" d="M600 450 C 550 400, 470 370, 420 390" />
 
+  <!-- Neuron 4 -->
+  <circle class="soma" cx="300" cy="500" r="30" />
+  <path class="dendrite" d="M300 500 C 280 460, 260 420, 220 390 L 225 395 C 265 425, 285 465, 300 500 Z" />
+  <path class="glow-path" d="M300 500 C 280 460, 260 420, 220 390" />
+
+</svg>
 </body>
 </html>
 
