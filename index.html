@@ -58,10 +58,31 @@
 <script>
 const svg = document.querySelector("svg");
 const numNeurons = 10;
-const neurons = [];
 
 function random(min, max) {
   return Math.random() * (max - min) + min;
+}
+
+function generateRandomWalk(x, y, segments = 5, step = 40) {
+  const points = [{ x, y }];
+  for (let i = 0; i < segments; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    x += Math.cos(angle) * step * (0.5 + Math.random());
+    y += Math.sin(angle) * step * (0.5 + Math.random());
+    points.push({ x, y });
+  }
+  return points;
+}
+
+function pathFromPoints(points) {
+  if (points.length < 2) return "";
+  let d = `M${points[0].x},${points[0].y}`;
+  for (let i = 1; i < points.length - 1; i++) {
+    const midX = (points[i].x + points[i + 1].x) / 2;
+    const midY = (points[i].y + points[i + 1].y) / 2;
+    d += ` Q ${points[i].x},${points[i].y} ${midX},${midY}`;
+  }
+  return d;
 }
 
 function createNeuron(id) {
@@ -70,7 +91,6 @@ function createNeuron(id) {
   const r = random(25, 45);
   const pulseDelay = random(0, 5);
 
-  // Soma
   const soma = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   soma.setAttribute("class", "soma");
   soma.setAttribute("cx", x);
@@ -79,27 +99,18 @@ function createNeuron(id) {
   soma.style.animation = `soma-pulse 3s ${pulseDelay}s infinite ease-in-out`;
   svg.appendChild(soma);
 
-  // Dendrite
   const dendrite = document.createElementNS("http://www.w3.org/2000/svg", "path");
   dendrite.setAttribute("class", "dendrite");
 
-  // Random organic bezier path
-  const cp1x = x + random(-100, 100);
-  const cp1y = y + random(-100, 100);
-  const cp2x = x + random(-150, 150);
-  const cp2y = y + random(-150, 150);
-  const endX = x + random(-200, 200);
-  const endY = y + random(-200, 200);
+  const points = generateRandomWalk(x, y);
+  const pathData = pathFromPoints(points);
 
-  const pathData = `M${x},${y} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${endX},${endY}
-                   L ${endX + 5},${endY + 5} C ${cp2x + 5},${cp2y + 5} ${cp1x + 5},${cp1y + 5} ${x + 5},${y + 5} Z`;
-  dendrite.setAttribute("d", pathData);
+  dendrite.setAttribute("d", pathData + ` L ${x + 5},${y + 5} Z`);
   svg.appendChild(dendrite);
 
-  // Glow path
   const glow = document.createElementNS("http://www.w3.org/2000/svg", "path");
   glow.setAttribute("class", "glow-path");
-  glow.setAttribute("d", `M${x},${y} C ${cp1x},${cp1y} ${cp2x},${cp2y} ${endX},${endY}`);
+  glow.setAttribute("d", pathData);
   glow.style.animation = `signal-pulse 4s ${pulseDelay}s infinite`;
   svg.appendChild(glow);
 }
@@ -137,4 +148,3 @@ for (let i = 0; i < numNeurons; i++) {
 </style>
 </body>
 </html>
-
