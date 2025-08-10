@@ -19,7 +19,6 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -276,6 +275,19 @@
             transition: all 0.3s ease;
             margin-top: 1rem;
         }
+        .neuron-bg{
+          position: fixed;
+          inset: 0;               /* top:0;right:0;bottom:0;left:0 */
+          z-index: -1;            /* behind everything */
+          pointer-events: none;   /* don't block clicks */
+          overflow: hidden;
+        }
+        .neuron-bg svg{
+          width: 100%;
+          height: 100%;
+          display: block;
+          opacity: 0.35;          /* subtle; tweak to taste (0.25–0.6) */
+        }
 
         .btn:hover {
             transform: translateY(-2px);
@@ -313,6 +325,7 @@
     </style>
 </head>
 <body>
+<div id="neuron-bg" aria-hidden="true"></div>
     <div class="container">
         <header class="header">
             <div class="profile-content">
