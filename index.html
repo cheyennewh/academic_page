@@ -1,97 +1,532 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Random Walk - Animated</title>
-  <style>
-    body {
-      background: #0b0c10;
-      margin: 0;
-      height: 100vh;
-      overflow: hidden;
-    }
-    svg {
-      width: 100vw;
-      height: 100vh;
-    }
-    .segment {
-      stroke: #1e90ff;
-      stroke-width: 4;
-      fill: none;
-    }
-    .walker {
-      fill: white;
-      r: 6;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Name - Cognitive Neuroscience Researcher</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.1)" points="0,0 1000,300 1000,1000 0,700"/></svg>');
+            background-size: cover;
+        }
+
+        .profile-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-img {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.2);
+            margin: 0 auto 2rem;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #999;
+        }
+
+        .name {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .title {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .social-links a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .nav {
+            background: rgba(52, 73, 94, 0.1);
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .nav a {
+            padding: 1rem 2rem;
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav a:hover, .nav a.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background: #3498db;
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav a:hover::after {
+            width: 100%;
+        }
+
+        .content {
+            padding: 3rem 2rem;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            border-radius: 2px;
+        }
+
+        .research-item, .teaching-item, .presentation-item {
+            background: rgba(255,255,255,0.8);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .research-item:hover, .teaching-item:hover, .presentation-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .research-item h3, .teaching-item h3, .presentation-item h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .research-item .meta, .teaching-item .meta, .presentation-item .meta {
+            color: #7f8c8d;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .skill-category {
+            background: rgba(255,255,255,0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .skill-category h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .skill-list {
+            list-style: none;
+        }
+
+        .skill-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .skill-list li:last-child {
+            border-bottom: none;
+        }
+
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .contact-card {
+            background: rgba(255,255,255,0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .contact-card i {
+            font-size: 2rem;
+            color: #3498db;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                border-radius: 15px;
+            }
+            
+            .name {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                flex-direction: column;
+            }
+            
+            .nav a {
+                padding: 1rem;
+                text-align: center;
+            }
+            
+            .content {
+                padding: 2rem 1rem;
+            }
+            
+            .profile-img {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
 </head>
 <body>
-<svg viewBox="0 0 800 600"></svg>
+    <div class="container">
+        <header class="header">
+            <div class="profile-content">
+                <div class="profile-img">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h1 class="name">Your Name</h1>
+                <p class="title">Doctoral Researcher in Cognitive Neuroscience</p>
+                <p>Columbia University Psychology Department</p>
+                
+                <div class="social-links">
+                    <a href="mailto:your.email@columbia.edu" title="Email"><i class="fas fa-envelope"></i></a>
+                    <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
+                    <a href="#" title="ORCID"><i class="fab fa-orcid"></i></a>
+                    <a href="#" title="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </header>
 
-<script>
-const svg = document.querySelector("svg");
+        <nav class="nav">
+            <a href="#about" class="nav-link active" onclick="showSection('about')">About</a>
+            <a href="#research" class="nav-link" onclick="showSection('research')">Research</a>
+            <a href="#teaching" class="nav-link" onclick="showSection('teaching')">Teaching</a>
+            <a href="#presentations" class="nav-link" onclick="showSection('presentations')">Presentations</a>
+            <a href="#skills" class="nav-link" onclick="showSection('skills')">Skills</a>
+            <a href="#contact" class="nav-link" onclick="showSection('contact')">Contact</a>
+        </nav>
 
-function generateRandomWalk(x, y, segments = 5, step = 50) {
-  const points = [{ x, y }];
-  for (let i = 0; i < segments; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    x += Math.cos(angle) * step;
-    y += Math.sin(angle) * step;
-    points.push({ x, y });
-  }
-  return points;
-}
+        <main class="content">
+            <section id="about" class="section active">
+                <h2>About Me</h2>
+                <p>I am a doctoral researcher in the Psychology Department at Columbia University, specializing in cognitive neuroscience and memory research. My work focuses on understanding the neural mechanisms underlying human cognition, with particular interests in memory processes, attention, and brain-behavior relationships.</p>
+                
+                <p>Prior to my doctoral studies, I conducted research at the University of Chicago, where I worked in multiple laboratories including the Memory Lab, Cognition Attention and Brain Lab (CAB Lab), and Brain Bridge Lab. This diverse research experience has provided me with a comprehensive understanding of cognitive processes from multiple perspectives.</p>
+                
+                <p>Beyond research, I am passionate about teaching and have extensive experience as both a teaching assistant and guest lecturer across various psychology courses. I also serve in leadership roles within the department and broader academic community.</p>
+                
+                <a href="#" class="btn">Download CV</a>
+            </section>
 
-function drawSegments(points) {
-  for (let i = 0; i < points.length - 1; i++) {
-    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    line.setAttribute("class", "segment");
-    line.setAttribute("x1", points[i].x);
-    line.setAttribute("y1", points[i].y);
-    line.setAttribute("x2", points[i + 1].x);
-    line.setAttribute("y2", points[i + 1].y);
-    svg.appendChild(line);
-  }
-}
+            <section id="research" class="section">
+                <h2>Research Projects</h2>
+                
+                <div class="research-item">
+                    <h3>Predicting Memorability</h3>
+                    <p class="meta">Ongoing • Computational Neuroscience</p>
+                    <p>Investigating the factors that make certain information more memorable than others using computational modeling and neuroimaging techniques. This research aims to understand the neural basis of memory formation and retrieval.</p>
+                </div>
+                
+                <div class="research-item">
+                    <h3>Predicting Memory</h3>
+                    <p class="meta">Ongoing • Cognitive Psychology</p>
+                    <p>Developing predictive models of memory performance using behavioral and physiological measures. The project combines machine learning approaches with traditional experimental psychology methods.</p>
+                </div>
+                
+                <div class="research-item">
+                    <h3>Music Recommendation Model</h3>
+                    <p class="meta">Completed • Data Science Application</p>
+                    <p>Created a machine learning model for personalized music recommendations, applying principles from cognitive psychology to understand individual preferences and listening patterns.</p>
+                </div>
+                
+                <div class="research-item">
+                    <h3>tDCS Research</h3>
+                    <p class="meta">Ongoing • Neurostimulation</p>
+                    <p>Investigating the effects of transcranial direct current stimulation (tDCS) on cognitive performance and neural activity, with applications for understanding brain plasticity and potential therapeutic interventions.</p>
+                </div>
+            </section>
 
-function animateWalker(points) {
-  const walker = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-  walker.setAttribute("class", "walker");
-  walker.setAttribute("r", 6);
-  svg.appendChild(walker);
+            <section id="teaching" class="section">
+                <h2>Teaching Experience</h2>
+                
+                <div class="teaching-item">
+                    <h3>Lead Teaching Fellow</h3>
+                    <p class="meta">Columbia Teaching and Learning (CTL)</p>
+                    <p>Mentor and support teaching assistants across the psychology department, providing pedagogical training and classroom management strategies.</p>
+                </div>
+                
+                <div class="teaching-item">
+                    <h3>Statistics for Behavioral Scientists</h3>
+                    <p class="meta">Teaching Assistant • Fall 2023</p>
+                    <p>Assisted students in understanding statistical concepts and their applications in psychological research, including hands-on experience with statistical software and data analysis.</p>
+                </div>
+                
+                <div class="teaching-item">
+                    <h3>Cognition: Basic Processes</h3>
+                    <p class="meta">Teaching Assistant & Guest Lecturer • 2024</p>
+                    <p>Taught fundamental concepts in cognitive psychology, including attention, memory, perception, and decision-making processes.</p>
+                </div>
+                
+                <div class="teaching-item">
+                    <h3>Summer Research Program</h3>
+                    <p class="meta">Instructor • "Cognition: from Lab to Life!"</p>
+                    <p>Designed and delivered an intensive summer program connecting laboratory research in cognition to real-world applications and everyday experiences.</p>
+                </div>
+            </section>
 
-  let i = 0;
-  function moveNext() {
-    if (i >= points.length - 1) return;
-    const start = points[i];
-    const end = points[i + 1];
-    const duration = 500;
-    const startTime = performance.now();
+            <section id="presentations" class="section">
+                <h2>Conference Presentations</h2>
+                
+                <div class="presentation-item">
+                    <h3>Cognitive Neuroscience Society (CNS)</h3>
+                    <p class="meta">2023 • Poster Presentation</p>
+                    <p>Presented research findings on neural mechanisms of memory and cognition to an international audience of cognitive neuroscientists.</p>
+                </div>
+                
+                <div class="presentation-item">
+                    <h3>Vision Sciences Society (VSS)</h3>
+                    <p class="meta">2021 • Poster Presentation</p>
+                    <p>Shared research on visual perception and its relationship to cognitive processes with experts in vision science.</p>
+                </div>
+                
+                <div class="presentation-item">
+                    <h3>Psychonomics Annual Meeting</h3>
+                    <p class="meta">2021 • Poster Presentation</p>
+                    <p>Presented findings on experimental psychology and cognitive processes to the broader experimental psychology community.</p>
+                </div>
+            </section>
 
-    function step(timestamp) {
-      const t = Math.min((timestamp - startTime) / duration, 1);
-      const x = start.x + (end.x - start.x) * t;
-      const y = start.y + (end.y - start.y) * t;
-      walker.setAttribute("cx", x);
-      walker.setAttribute("cy", y);
+            <section id="skills" class="section">
+                <h2>Technical Skills & Expertise</h2>
+                
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3><i class="fas fa-code"></i> Programming</h3>
+                        <ul class="skill-list">
+                            <li>Python</li>
+                            <li>R</li>
+                            <li>MATLAB</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h3><i class="fas fa-chart-line"></i> Analysis & Visualization</h3>
+                        <ul class="skill-list">
+                            <li>PsychoPy</li>
+                            <li>PyTorch</li>
+                            <li>TensorFlow</li>
+                            <li>GIS</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h3><i class="fas fa-database"></i> Data Collection</h3>
+                        <ul class="skill-list">
+                            <li>Gorilla</li>
+                            <li>Prolific</li>
+                            <li>AWS</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h3><i class="fas fa-brain"></i> Specialties</h3>
+                        <ul class="skill-list">
+                            <li>Statistical Modeling</li>
+                            <li>Bayesian Modeling</li>
+                            <li>Natural Language Processing</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
 
-      if (t < 1) {
-        requestAnimationFrame(step);
-      } else {
-        i++;
-        moveNext();
-      }
-    }
-    requestAnimationFrame(step);
-  }
-  moveNext();
-}
+            <section id="contact" class="section">
+                <h2>Contact Information</h2>
+                
+                <div class="contact-info">
+                    <div class="contact-card">
+                        <i class="fas fa-envelope"></i>
+                        <h3>Email</h3>
+                        <p>your.email@columbia.edu</p>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <h3>Office</h3>
+                        <p>Columbia University<br>Psychology Department<br>New York, NY</p>
+                    </div>
+                    
+                    <div class="contact-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Office Hours</h3>
+                        <p>By appointment<br>Email to schedule</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
-const startX = 400;
-const startY = 300;
-const walkPoints = generateRandomWalk(startX, startY);
-drawSegments(walkPoints);
-animateWalker(walkPoints);
-</script>
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            // Remove active class from all nav links
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked nav link
+            event.target.classList.add('active');
+        }
+
+        // Smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                });
+            });
+        });
+    </script>
 </body>
 </html>
