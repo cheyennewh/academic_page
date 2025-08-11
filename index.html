@@ -99,6 +99,88 @@
     .container{margin:1rem;border-radius:15px}
     .profile-img{width:150px;height:150px}
   }
+
+ :root{
+  --bg:#0b0f14;               /* page background */
+  --textPrimary:#f2f4f6;      /* header/main light text */
+  --textSecondary:#b0bec5;    /* subheads/meta */
+  --muted:#9aa7b3;            /* inactive tabs etc. */
+
+  --tabBg:#121820;            /* tabs bar background */
+  --panel:#ffffffF2;          /* container (keep light) */
+
+  --teal:#1da6a6;             /* accents pulled from image */
+  --cyan:#4ecdc4;
+  --accentGrad: linear-gradient(135deg, #1da6a6, #4ecdc4);
+}
+
+/* page bg */
+body{ background:var(--bg); }
+
+/* container keeps a light glass look */
+.container{
+  background:var(--panel);
+}
+
+/* HEADER text to match the neon */
+.header{ color:var(--textPrimary); }
+.header .name{
+  color:var(--textPrimary);
+  text-shadow: 0 0 10px rgba(30,200,200,.35);
+}
+.header .title,
+.header .profile-content p{
+  color:var(--textSecondary);
+}
+
+/* social icons = teal on hover */
+.social-links a{
+  color:var(--textPrimary);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.social-links a:hover{
+  background: rgba(30,200,200,0.18);
+  color:#fff;
+  box-shadow: 0 0 12px rgba(78,205,196,.35) inset, 0 0 10px rgba(78,205,196,.25);
+}
+
+/* TABS / TOGGLE BAR */
+.nav{
+  background: var(--tabBg);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.nav a{
+  color: var(--muted);
+}
+.nav a:hover,
+.nav a.active{
+  color:#0b0f14;             /* readable on the gradient */
+  background: var(--accentGrad);
+}
+.nav a::after{
+  background: var(--accentGrad);
+}
+
+/* Section headings use the same accent */
+.section h2{ color:#22303a; }
+.section h2::after{ background: var(--accentGrad); }
+
+/* Cards: a touch cooler border to tie with header */
+.research-item,.teaching-item,.presentation-item{
+  border-left:5px solid #1da6a6;
+}
+
+/* Buttons in the accent gradient */
+.btn{
+  background: var(--accentGrad);
+  box-shadow: 0 6px 18px rgba(78,205,196,.25);
+}
+.btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(78,205,196,.35);
+}
+
 </style>
 </head>
 <body>
