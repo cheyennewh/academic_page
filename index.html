@@ -20,6 +20,44 @@
     pointer-events:none;/* click-through */
     display:block;
   }
+ .header{
+   background: 
+     radial-gradient(1200px 600px at 10% 20%, #1b1e26 0%, transparent 60%),
+     radial-gradient(900px 500px at 85% 30%, #0f1116 0%, transparent 55%),
+     conic-gradient(from 240deg at 60% 60%, #0f1116 0%, #171921 30%, #0f1116 60%, #171921 85%, #0f1116 100%),
+     #14161c; /* base */
+   color:#fff;
+   position:relative;
+   overflow:hidden;
+   isolation:isolate;
+ }
+ .header::after{
+  content:"";
+  position:absolute; inset:0;
+  pointer-events:none;
+  box-shadow: inset 0 0 200px 120px rgba(0,0,0,0.6);
+  z-index:0;
+}
+.header::before{
+  content:"";
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  opacity:.05;         /* 0.03–0.08 */
+  mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/></filter>\
+<rect width='100%' height='100%' filter='url(#n)'/>\
+</svg>");
+  background-size: 240px 240px; /* scale grain */
+}
+/* sits between background and content */
+.header .blur-overlay{
+  position:absolute; inset:0; z-index:0; pointer-events:none;
+  background: rgba(20,22,28,0.4);      /* tint */
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,0.04); /* subtle rim light */
+}
 
   /* === HEADER with neuron SVG background === */
   .container{max-width:1200px;margin:0 auto; background:rgba(255,255,255,0.95);
@@ -90,6 +128,11 @@
   <header class="header">
     <!-- Neuron SVG lives INSIDE header -->
     <div id="neuron-header-bg" aria-hidden="true"></div>
+<header class="header">
+  <div id="neuron-header-bg" aria-hidden="true"></div>
+  <div class="blur-overlay" aria-hidden="true"></div>
+  <div class="profile-content"> … </div>
+</header>
 
     <div class="profile-content">
       <div class="profile-img"><i class="fas fa-user"></i></div>
