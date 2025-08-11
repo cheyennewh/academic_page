@@ -7,69 +7,46 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
-  body{
-    font-family:'Georgia',serif; line-height:1.6; color:#333;
-    background:#0e0f14; /* will be covered by canvas; fallback color */
-    min-height:100vh;
-  }
+  body{font-family:'Georgia',serif; line-height:1.6; color:#333; background:#0e0f14; min-height:100vh}
 
-  /* === GLOBAL PARTICLE BACKGROUND (canvas) === */
-  #bg-canvas{
-    position:fixed; inset:0;
-    z-index:-2;         /* behind everything */
-    pointer-events:none;/* click-through */
-    display:block;
+  /* Dimensional header (gradients + vignette + grain + blur overlay) */
+  .header{
+    background:
+      radial-gradient(1200px 600px at 10% 20%, #1b1e26 0%, transparent 60%),
+      radial-gradient(900px 500px at 85% 30%, #0f1116 0%, transparent 55%),
+      conic-gradient(from 240deg at 60% 60%, #0f1116 0, #171921 30%, #0f1116 60%, #171921 85%, #0f1116 100%),
+      #14161c;
+    color:#fff; padding:3rem 2rem; text-align:center;
+    position:relative; overflow:hidden; isolation:isolate;
   }
- .header{
-   background: 
-     radial-gradient(1200px 600px at 10% 20%, #1b1e26 0%, transparent 60%),
-     radial-gradient(900px 500px at 85% 30%, #0f1116 0%, transparent 55%),
-     conic-gradient(from 240deg at 60% 60%, #0f1116 0%, #171921 30%, #0f1116 60%, #171921 85%, #0f1116 100%),
-     #14161c; /* base */
-   color:#fff;
-   position:relative;
-   overflow:hidden;
-   isolation:isolate;
- }
- .header::after{
-  content:"";
-  position:absolute; inset:0;
-  pointer-events:none;
-  box-shadow: inset 0 0 200px 120px rgba(0,0,0,0.6);
-  z-index:0;
-}
-.header::before{
-  content:"";
-  position:absolute; inset:0; z-index:0; pointer-events:none;
-  opacity:.05;         /* 0.03–0.08 */
-  mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml;utf8,\
+  .header::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    box-shadow: inset 0 0 200px 120px rgba(0,0,0,.6); z-index:0;
+  }
+  .header::before{
+    content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+    opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'>\
 <filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/></filter>\
 <rect width='100%' height='100%' filter='url(#n)'/>\
 </svg>");
-  background-size: 240px 240px; /* scale grain */
-}
-/* sits between background and content */
-.header .blur-overlay{
-  position:absolute; inset:0; z-index:0; pointer-events:none;
-  background: rgba(20,22,28,0.4);      /* tint */
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(255,255,255,0.04); /* subtle rim light */
-}
+    background-size:240px 240px;
+  }
+  .header .blur-overlay{
+    position:absolute; inset:0; z-index:0; pointer-events:none;
+    background: rgba(20,22,28,.4);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(255,255,255,.04);
+  }
 
-  /* === HEADER with neuron SVG background === */
-  .container{max-width:1200px;margin:0 auto; background:rgba(255,255,255,0.95);
+  .container{max-width:1200px;margin:0 auto; background:rgba(255,255,255,.95);
     backdrop-filter:blur(10px); border-radius:20px; box-shadow:0 20px 40px rgba(0,0,0,.1);
     margin-top:2rem; margin-bottom:2rem; overflow:hidden;
   }
-  .header{
-    background:#14161c;           /* your requested header color */
-    color:#fff; padding:3rem 2rem; text-align:center;
-    position:relative; overflow:hidden; isolation:isolate;
-  }
-  /* neuron svg sits under header content */
+
+  /* Neuron SVG mount INSIDE header */
   #neuron-header-bg{
     position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.35;
   }
@@ -108,11 +85,9 @@
     color:#fff; text-decoration:none; border-radius:25px; font-weight:500; transition:.3s; margin-top:1rem}
   .btn:hover{transform:translateY(-2px); box-shadow:0 5px 15px rgba(0,0,0,.2)}
 
-  /* optional motion respect */
   @media (prefers-reduced-motion: reduce){
     #neuron-header-bg .pulsePath{ animation-duration:12s !important }
   }
-
   @media (max-width:768px){
     .container{margin:1rem;border-radius:15px}
     .profile-img{width:150px;height:150px}
@@ -121,25 +96,18 @@
 </head>
 <body>
 
-<!-- GLOBAL PARTICLE BACKGROUND -->
-<canvas id="bg-canvas"></canvas>
-
 <div class="container">
   <header class="header">
-    <!-- Neuron SVG lives INSIDE header -->
     <div id="neuron-header-bg" aria-hidden="true"></div>
-<header class="header">
-  <div id="neuron-header-bg" aria-hidden="true"></div>
-  <div class="blur-overlay" aria-hidden="true"></div>
-  <div class="profile-content"> … </div>
-</header>
+    <div class="blur-overlay" aria-hidden="true"></div>
 
+    <!-- your header text/content stays on top -->
     <div class="profile-content">
       <div class="profile-img"><i class="fas fa-user"></i></div>
       <h1 class="name">Your Name</h1>
       <p class="title">Doctoral Researcher in Cognitive Neuroscience</p>
       <p>Columbia University Psychology Department</p>
-      <div class="social-links">
+      <div class="social-links" style="margin-top:1rem">
         <a href="mailto:your.email@columbia.edu" title="Email"><i class="fas fa-envelope"></i></a>
         <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
         <a href="#" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
@@ -152,7 +120,7 @@
   <nav class="nav">
     <a href="#about" class="nav-link active" onclick="showSection(event,'about')">About</a>
     <a href="#research" class="nav-link" onclick="showSection(event,'research')">Research</a>
-    <a href="#teaching" class="nav-link" onclick="showSection(event,'teaching')">Teaching</a>
+    <a href="#teaching" class="nav-link" onclick="showSection(event,'teaching')">Pedagogy</a>
     <a href="#presentations" class="nav-link" onclick="showSection(event,'presentations')">Presentations</a>
     <a href="#skills" class="nav-link" onclick="showSection(event,'skills')">Skills</a>
     <a href="#contact" class="nav-link" onclick="showSection(event,'contact')">Contact</a>
@@ -161,15 +129,15 @@
   <main class="content">
     <section id="about" class="section active">
       <h2>About Me</h2>
-      <p>…</p>
+      <p>…your copy…</p>
       <a href="#" class="btn">Download CV</a>
     </section>
-    <!-- other sections ... -->
+    <!-- other sections… -->
   </main>
 </div>
 
 <script>
-/* ======= NAV ======= */
+/* nav */
 function showSection(e, id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -177,119 +145,41 @@ function showSection(e, id){
   e.target.classList.add('active');
 }
 
-/* =========================================================
-   1) GLOBAL PARTICLE BACKGROUND (your code, fixed + HiDPI)
-   ========================================================= */
+/* ===========================
+   Seeded Neuron Header SVG
+   =========================== */
 (() => {
-  let w,h,loopId,ctx,particles=[], dpr = Math.max(1, Math.round(window.devicePixelRatio||1));
-  const canvas = document.getElementById('bg-canvas');
+  // 1) Seed handling
+  const DEFAULT_SEED = 133742; // change me
+  const urlSeed = Number(new URLSearchParams(location.search).get('seed'));
+  const SEED = Number.isFinite(urlSeed) ? urlSeed : DEFAULT_SEED;
 
-  const options = {
-    particleColor: "rgba(255,255,255,0.9)",
-    lineColor: "rgba(0,181,255,1)",
-    particleAmount: 60,
-    defaultRadius: 2,
-    variantRadius: 2,
-    defaultSpeed: .05,
-    variantSpeed: .05,
-    linkRadius: 180
-  };
-  const rgb = options.lineColor.match(/\d+/g);
-
-  class Particle{
-    constructor(){
-      this.reset();
-      this.radius = options.defaultRadius + Math.random()*options.variantRadius;
-      this.speed  = options.defaultSpeed  + Math.random()*options.variantSpeed;
-      this.directionAngle = Math.random()*Math.PI*2;
-      this.vector = { x: Math.cos(this.directionAngle)*this.speed,
-                      y: Math.sin(this.directionAngle)*this.speed };
-      this.color = options.particleColor;
-    }
-    reset(){
-      this.x = Math.random()*w;
-      this.y = Math.random()*h;
-    }
-    border(){
-      if(this.x>=w||this.x<=0) this.vector.x*=-1;
-      if(this.y>=h||this.y<=0) this.vector.y*=-1;
-      this.x = Math.max(0,Math.min(w,this.x));
-      this.y = Math.max(0,Math.min(h,this.y));
-    }
-    update(){ this.border(); this.x+=this.vector.x; this.y+=this.vector.y; }
-    draw(){
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
-      ctx.closePath();
-      ctx.fillStyle = this.color;
-      ctx.fill();
-    }
+  // Mulberry32 PRNG
+  function mulberry32(seed){
+    let t = seed >>> 0;
+    return function(){
+      t += 0x6D2B79F5;
+      let x = Math.imul(t ^ (t >>> 15), 1 | t);
+      x ^= x + Math.imul(x ^ (x >>> 7), 61 | x);
+      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+    };
   }
+  const rand = mulberry32(SEED);
+  const R = (a,b)=>a + (b-a)*rand();
 
-  function resize(){
-    // CSS size in CSS px
-    const cssW = window.innerWidth;
-    const cssH = window.innerHeight;
-    canvas.width  = cssW * dpr;
-    canvas.height = cssH * dpr;
-    canvas.style.width  = cssW + 'px';
-    canvas.style.height = cssH + 'px';
-    ctx = canvas.getContext('2d');
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    w = cssW; h = cssH;
-  }
+  // Fixed virtual canvas so drawing stays identical; SVG scales to header
+  const VW = 1200, VH = 420;
 
-  function init(){
-    resize();
-    particles = [];
-    for(let i=0;i<options.particleAmount;i++) particles.push(new Particle());
-    cancelAnimationFrame(loopId);
-    loop();
-  }
-
-  function loop(){
-    ctx.clearRect(0,0,w,h);
-    drawLines();
-    particles.forEach(p=>{ p.update(); p.draw(); });
-    loopId = requestAnimationFrame(loop);
-  }
-
-  function dist(x1,y1,x2,y2){ return Math.hypot(x2-x1,y2-y1); }
-  function drawLines(){
-    for(let i=0;i<particles.length;i++){
-      for(let j=i+1;j<particles.length;j++){
-        const d = dist(particles[i].x,particles[i].y, particles[j].x,particles[j].y);
-        const opacity = 1 - d/options.linkRadius;
-        if(opacity>0){
-          ctx.lineWidth = 0.5;
-          ctx.strokeStyle = `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${opacity})`;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x,particles[i].y);
-          ctx.lineTo(particles[j].x,particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
-  }
-
-  window.addEventListener('resize', init, {passive:true});
-  init();
-})();
-
-/* =========================================================
-   2) NEURON SVG INSIDE HEADER ONLY (compact version)
-   ========================================================= */
-(() => {
   const mount = document.getElementById('neuron-header-bg');
   const NEON='#14e6ff', SOFT='#7ffaff', PULSE='#fff';
-  const CFG = { somaCount: 8, minWalks: 5, extraWalkProb:.25,
-                step: 28, jitter: Math.PI/6, branches: 8, pulseSec: 5,
-                margin: 6, maxMain: 160, maxBranch: 110 };
-  const R = (a,b)=>a+(b-a)*Math.random();
+  const CFG = { somaCount: 6, minWalks: 4, extraWalkProb:.25,
+                step: 28, jitter: Math.PI/6, branches: 12, pulseSec: 5,
+                margin: 10, maxMain: 180, maxBranch: 120 };
 
-  function buildSVG(W,H){
+  function buildSVG(){
     const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+    svg.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+    svg.setAttribute('preserveAspectRatio','xMidYMid slice');
     svg.innerHTML = `
       <defs>
         <filter id="glow-soft" x="-40%" y="-40%" width="180%" height="180%">
@@ -329,67 +219,101 @@ function showSection(e, id){
     };
   }
 
-  const inB=(W,H,x,y,m)=>x>m&&x<W-m&&y>m&&y<H-m;
-  const stepFn=(W,H,m,x,y,a,l)=>({x:Math.max(m,Math.min(W-m,x+Math.cos(a)*l)),
-                                   y:Math.max(m,Math.min(H-m,y+Math.sin(a)*l))});
-  function angles(n,sep=Math.PI/6){const out=[];while(out.length<n){const a=Math.random()*Math.PI*2;
-    if(out.every(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))>=sep))out.push(a);}return out;}
+  const inB=(x,y,m)=>x>m&&x<VW-m&&y>m&&y<VH-m;
+  const stepFn=(x,y,a,l)=>({x:Math.max(CFG.margin,Math.min(VW-CFG.margin,x+Math.cos(a)*l)),
+                            y:Math.max(CFG.margin,Math.min(VH-CFG.margin,y+Math.sin(a)*l))});
+  function angles(n,sep=Math.PI/6){
+    const out=[]; let tries=0;
+    while(out.length<n && tries<1000){
+      const a=rand()*Math.PI*2;
+      if(out.every(b => Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))>=sep)) out.push(a);
+      tries++;
+    }
+    return out;
+  }
 
   function somaPath(cx,cy,baseR=20,arms=8,irr=.5){
-    const P=[]; for(let i=0;i<arms;i++){const a=i/arms*2*Math.PI+R(-.12,.12);
-      const r=baseR*(1+R(-irr,irr)); P.push([cx+Math.cos(a)*r,cy+Math.sin(a)*r]);}
+    const P=[]; for(let i=0;i<arms;i++){
+      const a=i/arms*2*Math.PI + R(-.12,.12);
+      const r=baseR*(1+R(-irr,irr));
+      P.push([cx+Math.cos(a)*r, cy+Math.sin(a)*r]);
+    }
     const d=[]; for(let i=0;i<P.length;i++){
       const p0=P[(i-1+P.length)%P.length],p1=P[i],p2=P[(i+1)%P.length],p3=P[(i+2)%P.length];
-      if(i===0)d.push(`M${p1[0]},${p1[1]}`);
-      const c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6;
-      const c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6;
+      if(i===0) d.push(`M${p1[0]},${p1[1]}`);
+      const c1x=p1[0]+(p2[0]-p0[0])/6, c1y=p1[1]+(p2[1]-p0[1])/6;
+      const c2x=p2[0]-(p3[0]-p1[0])/6, c2y=p2[1]-(p3[1]-p1[1])/6;
       d.push(`C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`);
-    } d.push('Z'); return d.join(' ');
+    }
+    d.push('Z'); return d.join(' ');
   }
   function ribbon(pts,w0=3,w1=.9){
-    if(pts.length<2)return''; const L=[],R=[];
+    if(pts.length<2) return '';
+    const L=[],Rr=[];
     for(let i=0;i<pts.length;i++){
       const p=pts[i],pr=pts[i-1]||p,nx=pts[i+1]||p,vx=nx.x-pr.x,vy=nx.y-pr.y,len=Math.hypot(vx,vy)||1;
-      const nX=-vy/len,nY=vx/len,t=i/(pts.length-1),w=w0*(1-t)+w1*t;
-      L.push([p.x+nX*w,p.y+nY*w]); R.push([p.x-nX*w,p.y-nY*w]);
+      const nX=-vy/len,nY=vx/len, t=i/(pts.length-1), w=w0*(1-t)+w1*t;
+      L.push([p.x+nX*w, p.y+nY*w]); Rr.push([p.x-nX*w, p.y-nY*w]);
     }
-    const all=L.concat(R.reverse()); let d=`M${all[0][0]},${all[0][1]}`; for(let i=1;i<all.length;i++) d+=` L${all[i][0]},${all[i][1]}`; return d+' Z';
+    const all=L.concat(Rr.reverse()); let d=`M${all[0][0]},${all[0][1]}`;
+    for(let i=1;i<all.length;i++) d+=` L${all[i][0]},${all[i][1]}`; return d+' Z';
   }
-  function smoothD(pts){ if(pts.length<2) return ''; let d=`M${pts[0].x},${pts[0].y}`;
-    for(let i=1;i<pts.length-1;i++){const p1=pts[i],p2=pts[i+1],mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;
-      d+=` Q ${p1.x},${p1.y} ${mx},${my}`;} return d; }
+  function smoothD(pts){
+    if(pts.length<2) return '';
+    let d=`M${pts[0].x},${pts[0].y}`;
+    for(let i=1;i<pts.length-1;i++){
+      const p1=pts[i],p2=pts[i+1],mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;
+      d+=` Q ${p1.x},${p1.y} ${mx},${my}`;
+    }
+    return d;
+  }
 
-  function toEdge(W,H,origin,step,jitter,startA,maxSteps,margin){
-    let {x,y}=origin, a=(startA==null)?Math.random()*Math.PI*2:startA;
-    const pts=[{x,y}], bias=Math.atan2(y<H/2?-1:1, x<W/2?-1:1); a=(a*3+bias)/4;
-    let s=0; while(inB(W,H,x,y,margin)&&s<maxSteps){ a+=R(-jitter,jitter);
-      const p=stepFn(W,H,margin,x,y,a,step); x=p.x;y=p.y; pts.push({x,y}); s++; if(!inB(W,H,x,y,margin))break; }
-    const last=pts[pts.length-1], toL=last.x-margin, toR=(W-margin)-last.x, toT=last.y-margin, toB=(H-margin)-last.y;
-    const m=Math.min(toL,toR,toT,toB); if(m===toL)last.x=margin; if(m===toR)last.x=W-margin; if(m===toT)last.y=margin; if(m===toB)last.y=H-margin;
+  function toEdge(origin,step,jitter,startA,maxSteps){
+    let {x,y}=origin, a=(startA==null)?rand()*Math.PI*2:startA;
+    const pts=[{x,y}], bias=Math.atan2(y<VH/2?-1:1, x<VW/2?-1:1); a=(a*3+bias)/4;
+    let s=0;
+    while(inB(x,y,CFG.margin) && s<maxSteps){
+      a += R(-jitter,jitter);
+      const p=stepFn(x,y,a,step); x=p.x; y=p.y; pts.push({x,y}); s++;
+      if(!inB(x,y,CFG.margin)) break;
+    }
+    // snap final point to nearest edge to complete the span
+    const last=pts[pts.length-1], toL=last.x-CFG.margin, toR=(VW-CFG.margin)-last.x,
+          toT=last.y-CFG.margin, toB=(VH-CFG.margin)-last.y;
+    const m=Math.min(toL,toR,toT,toB);
+    if(m===toL) last.x=CFG.margin;
+    if(m===toR) last.x=VW-CFG.margin;
+    if(m===toT) last.y=CFG.margin;
+    if(m===toB) last.y=VH-CFG.margin;
     return pts;
   }
-  function branchToEdge(W,H,anchor,prev,maxSteps,margin){
+
+  function branchToEdge(anchor,prev,maxSteps){
     const st=R(14,20), jit=Math.PI/8, dx=anchor.x-(prev?.x??anchor.x), dy=anchor.y-(prev?.y??anchor.y);
-    let a=Math.atan2(dy,dx)+(Math.random()<.5?1:-1)*(Math.PI/2+R(-.6,.6));
-    const bias=Math.atan2(anchor.y<H/2?-1:1, anchor.x<W/2?-1:1); a=(a*3+bias)/4;
+    let a=Math.atan2(dy,dx) + (rand()<.5?1:-1)*(Math.PI/2+R(-.6,.6));
+    const bias=Math.atan2(anchor.y<VH/2?-1:1, anchor.x<VW/2?-1:1); a=(a*3+bias)/4;
     let x=anchor.x,y=anchor.y, pts=[{x,y}], s=0;
-    while(inB(W,H,x,y,margin)&&s<maxSteps){ a+=R(-jit,jit); const p=stepFn(W,H,margin,x,y,a,st);
-      x=p.x;y=p.y; pts.push({x,y}); s++; if(!inB(W,H,x,y,margin))break; }
-    const last=pts[pts.length-1], toL=last.x-margin, toR=(W-margin)-last.x, toT=last.y-margin, toB=(H-margin)-last.y;
-    const m=Math.min(toL,toR,toT,toB); if(m===toL)last.x=margin; if(m===toR)last.x=W-margin; if(m===toT)last.y=margin; if(m===toB)last.y=H-margin;
+    while(inB(x,y,CFG.margin) && s<maxSteps){
+      a += R(-jit,jit); const p=stepFn(x,y,a,st); x=p.x; y=p.y; pts.push({x,y}); s++;
+      if(!inB(x,y,CFG.margin)) break;
+    }
+    const last=pts[pts.length-1], toL=last.x-CFG.margin, toR=(VW-CFG.margin)-last.x,
+          toT=last.y-CFG.margin, toB=(VH-CFG.margin)-last.y;
+    const m=Math.min(toL,toR,toT,toB);
+    if(m===toL) last.x=CFG.margin;
+    if(m===toR) last.x=VW-CFG.margin;
+    if(m===toT) last.y=CFG.margin;
+    if(m===toB) last.y=VH-CFG.margin;
     return pts;
   }
 
   function drawHeader(){
-    const W = mount.clientWidth;
-    const H = mount.clientHeight;
-    if(!W||!H) return; // header not laid out yet
-    const {svg,LAYER_BRANCH,LAYER_MAIN,LAYER_PULSE,LAYER_SOMA} = buildSVG(W,H);
+    const {svg,LAYER_BRANCH,LAYER_MAIN,LAYER_PULSE,LAYER_SOMA} = buildSVG();
 
-    // somas in header area
+    // somas
     const somas=[];
     for(let i=0;i<CFG.somaCount;i++){
-      const cx=R(80,W-80), cy=R(60,H-60);
+      const cx=R(80,VW-80), cy=R(60,VH-60);
       const soma=document.createElementNS(svg.namespaceURI,'path');
       soma.setAttribute('d',somaPath(cx,cy,R(14,22),Math.floor(R(5,8)),.4));
       soma.setAttribute('class','soma'); LAYER_SOMA.appendChild(soma);
@@ -399,43 +323,46 @@ function showSection(e, id){
       somas.push({x:cx,y:cy});
     }
 
+    // main fibers
     const all=[];
     somas.forEach(o=>{
-      const count = CFG.minWalks + (Math.random()<CFG.extraWalkProb?1:0);
+      const count = CFG.minWalks + (rand()<CFG.extraWalkProb?1:0);
       const angs = angles(count, Math.PI/5);
       angs.forEach(a=>{
-        const bb = toEdge(W,H,o,CFG.step,CFG.jitter,a,CFG.maxMain,CFG.margin);
+        const bb = toEdge(o,CFG.step,CFG.jitter,a,CFG.maxMain);
         all.push(bb);
-        const outer=document.createElementNS(svg.namespaceURI,'path'); outer.setAttribute('d',ribbon(bb,R(2,3.5),R(.7,1)));
-        outer.setAttribute('class','fiber'); LAYER_MAIN.appendChild(outer);
-        const inner=document.createElementNS(svg.namespaceURI,'path'); inner.setAttribute('d',ribbon(bb,R(1,1.8),R(.5,.8)));
-        inner.setAttribute('class','fiber inner'); LAYER_MAIN.appendChild(inner);
-        const pulse=document.createElementNS(svg.namespaceURI,'path'); pulse.setAttribute('d',smoothD(bb));
-        pulse.setAttribute('class','pulsePath'); pulse.style.animationDuration = CFG.pulseSec+'s'; LAYER_PULSE.appendChild(pulse);
+        const outer=document.createElementNS(svg.namespaceURI,'path');
+        outer.setAttribute('d',ribbon(bb,R(2,3.5),R(.7,1))); outer.setAttribute('class','fiber');
+        LAYER_MAIN.appendChild(outer);
+        const inner=document.createElementNS(svg.namespaceURI,'path');
+        inner.setAttribute('d',ribbon(bb,R(1,1.8),R(.5,.8))); inner.setAttribute('class','fiber inner');
+        LAYER_MAIN.appendChild(inner);
+        const pulse=document.createElementNS(svg.namespaceURI,'path');
+        pulse.setAttribute('d',smoothD(bb)); pulse.setAttribute('class','pulsePath');
+        pulse.style.animationDuration = CFG.pulseSec+'s';
+        LAYER_PULSE.appendChild(pulse);
       });
     });
 
+    // branches
     for(let k=0;k<CFG.branches;k++){
-      const bb=all[Math.floor(Math.random()*all.length)];
+      const bb=all[Math.floor(rand()*all.length)];
       const idx=Math.floor(R(2, Math.min(bb.length-4, bb.length*0.7)));
       const anchor=bb[idx], prev=bb[idx-1];
-      const pts=branchToEdge(W,H,anchor,prev,CFG.maxBranch,CFG.margin);
+      const pts=branchToEdge(anchor,prev,CFG.maxBranch);
 
-      const o=document.createElementNS(svg.namespaceURI,'path'); o.setAttribute('d',ribbon(pts,R(2,3),R(.4,.8)));
-      o.setAttribute('class','fiber'); LAYER_BRANCH.appendChild(o);
-      const i=document.createElementNS(svg.namespaceURI,'path'); i.setAttribute('d',ribbon(pts,R(1.2,2),R(.3,.6)));
-      i.setAttribute('class','fiber inner'); LAYER_BRANCH.appendChild(i);
-
-      const p=document.createElementNS(svg.namespaceURI,'path'); p.setAttribute('d',smoothD(pts)); p.setAttribute('class','pulsePath');
+      const o=document.createElementNS(svg.namespaceURI,'path');
+      o.setAttribute('d',ribbon(pts,R(2,3),R(.4,.8))); o.setAttribute('class','fiber'); LAYER_BRANCH.appendChild(o);
+      const i=document.createElementNS(svg.namespaceURI,'path');
+      i.setAttribute('d',ribbon(pts,R(1.2,2),R(.3,.6))); i.setAttribute('class','fiber inner'); LAYER_BRANCH.appendChild(i);
+      const p=document.createElementNS(svg.namespaceURI,'path');
+      p.setAttribute('d',smoothD(pts)); p.setAttribute('class','pulsePath');
       p.style.animationDuration=(CFG.pulseSec*.9)+'s'; LAYER_PULSE.appendChild(p);
     }
   }
 
-  // draw once, and on resize (debounced) to fit header size
-  let rid; const onResize=()=>{ cancelAnimationFrame(rid); rid=requestAnimationFrame(drawHeader); };
-  window.addEventListener('resize', onResize, {passive:true});
-  // header might not have height until layout; draw after load
-  window.addEventListener('load', drawHeader);
+  // Draw once (deterministic). No redraw on resize.
+  drawHeader();
 })();
 </script>
 </body>
