@@ -557,5 +557,180 @@
             });
         });
     </script>
+    <script type="module">
+        /* === Neuron background === */
+        const mount = document.getElementById('neuron-bg');
+        
+        const CFG = {
+          somaCount: 3, minWalks: 4, extraWalkProb: .3,
+          step: 40, jitter: Math.PI/6,
+          branches: 10, pulseSec: 4,
+          margin: 10, maxMain: 200, maxBranch: 140
+        };
+        const NEON='#14e6ff', SOFT='#7ffaff', PULSE='#fff';
+        const R = (a,b)=>a+(b-a)*Math.random();
+        
+        function buildSVG(W,H){
+          const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+          svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+          svg.innerHTML = `
+            <defs>
+              <filter id="glow-soft" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="4" result="b1"/><feMerge>
+                  <feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glow-strong" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="5" result="b1"/>
+                <feGaussianBlur stdDeviation="10" result="b2"/><feMerge>
+                  <feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="glow-pulse" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="2" result="b1"/><feMerge>
+                  <feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <g id="branches"></g><g id="main"></g><g id="pulses"></g><g id="somas"></g>
+            <style>
+              .soma{fill:${NEON};opacity:1;filter:url(#glow-strong)}
+              .soma-core{fill:${NEON};opacity:1;filter:url(#glow-soft)}
+              .fiber{fill:${NEON};opacity:.85;filter:url(#glow-soft)}
+              .fiber.inner{fill:${SOFT};opacity:.7}
+              .pulsePath{
+                stroke:${PULSE};stroke-width:2;fill:none;stroke-linecap:round;
+                stroke-dasharray:120 720;animation:flow ${CFG.pulseSec}s linear infinite;
+                filter:url(#glow-pulse);opacity:.85;mix-blend-mode:screen
+              }
+              @keyframes flow{from{stroke-dashoffset:0}to{stroke-dashoffset:-840}}
+            </style>`;
+          mount.innerHTML=''; mount.appendChild(svg);
+          return {
+            svg,
+            LAYER_BRANCH: svg.querySelector('#branches'),
+            LAYER_MAIN:   svg.querySelector('#main'),
+            LAYER_PULSE:  svg.querySelector('#pulses'),
+            LAYER_SOMA:   svg.querySelector('#somas')
+          };
+        }
+        
+        const inB=(W,H,x,y,m)=>x>m&&x<W-m&&y>m&&y<H-m;
+        const step=(W,H,m,x,y,a,l)=>({x:Math.max(m,Math.min(W-m,x+Math.cos(a)*l)),
+                                       y:Math.max(m,Math.min(H-m,y+Math.sin(a)*l))});
+        function angles(n,sep=Math.PI/6){const out=[];while(out.length<n){const a=Math.random()*Math.PI*2;
+          if(out.every(b=>Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))>=sep))out.push(a);}return out;}
+        
+        function somaPath(cx,cy,baseR=24,arms=8,irr=.5){
+          const P=[]; for(let i=0;i<arms;i++){const a=i/arms*2*Math.PI+R(-.12,.12);
+            const r=baseR*(1+R(-irr,irr)); P.push([cx+Math.cos(a)*r,cy+Math.sin(a)*r]);}
+          const d=[]; for(let i=0;i<P.length;i++){const p0=P[(i-1+P.length)%P.length],p1=P[i],p2=P[(i+1)%P.length],p3=P[(i+2)%P.length];
+            if(i===0)d.push(`M${p1[0]},${p1[1]}`); const c1x=p1[0]+(p2[0]-p0[0])/6,c1y=p1[1]+(p2[1]-p0[1])/6;
+            const c2x=p2[0]-(p3[0]-p1[0])/6,c2y=p2[1]-(p3[1]-p1[1])/6; d.push(`C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`);}
+          d.push('Z'); return d.join(' ');
+        }
+        function ribbon(pts,w0=3,w1=.9){
+          if(pts.length<2) return '';
+          const L=[],Rr=[];
+          for(let i=0;i<pts.length;i++){
+            const p=pts[i],pr=pts[i-1]||p,nx=pts[i+1]||p,vx=nx.x-pr.x,vy=nx.y-pr.y,len=Math.hypot(vx,vy)||1;
+            const nX=-vy/len,nY=vx/len,t=i/(pts.length-1),w=w0*(1-t)+w1*t;
+            L.push([p.x+nX*w,p.y+nY*w]); Rr.push([p.x-nX*w,p.y-nY*w]);
+          }
+          const all=L.concat(Rr.reverse()); let d=`M${all[0][0]},${all[0][1]}`;
+          for(let i=1;i<all.length;i++) d+=` L${all[i][0]},${all[i][1]}`; return d+' Z';
+        }
+        function smoothD(pts){ if(pts.length<2) return ''; let d=`M${pts[0].x},${pts[0].y}`;
+          for(let i=1;i<pts.length-1;i++){const p1=pts[i],p2=pts[i+1],mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;
+            d+=` Q ${p1.x},${p1.y} ${mx},${my}`;} return d; }
+        
+        function toEdge(W,H,origin,stepLen,jitter,startA,maxSteps,margin){
+          let {x,y}=origin, a=(startA==null)?Math.random()*Math.PI*2:startA;
+          const pts=[{x,y}], bias=Math.atan2(y<H/2?-1:1,x<W/2?-1:1); a=(a*3+bias)/4;
+          let s=0; while(inB(W,H,x,y,margin)&&s<maxSteps){ a+=R(-jitter,jitter);
+            const p=step(W,H,margin,x,y,a,stepLen); x=p.x;y=p.y; pts.push({x,y}); s++; if(!inB(W,H,x,y,margin))break; }
+          const last=pts[pts.length-1], toL=last.x-margin, toR=(W-margin)-last.x, toT=last.y-margin, toB=(H-margin)-last.y;
+          const m=Math.min(toL,toR,toT,toB); if(m===toL)last.x=margin; if(m===toR)last.x=W-margin; if(m===toT)last.y=margin; if(m===toB)last.y=H-margin;
+          return pts;
+        }
+        function branchToEdge(W,H,anchor,prev,maxSteps,margin){
+          const stepLen=R(16,24), jit=Math.PI/8, dx=anchor.x-(prev?.x??anchor.x), dy=anchor.y-(prev?.y??anchor.y);
+          let a=Math.atan2(dy,dx)+ (Math.random()<.5?1:-1)*(Math.PI/2+R(-.6,.6));
+          const bias=Math.atan2(anchor.y<H/2?-1:1,anchor.x<W/2?-1:1); a=(a*3+bias)/4;
+          let x=anchor.x,y=anchor.y, pts=[{x,y}], s=0;
+          while(inB(W,H,x,y,margin)&&s<maxSteps){ a+=R(-jit,jit); const p=step(W,H,margin,x,y,a,stepLen);
+            x=p.x;y=p.y; pts.push({x,y}); s++; if(!inB(W,H,x,y,margin))break; }
+          const last=pts[pts.length-1], toL=last.x-margin, toR=(W-margin)-last.x, toT=last.y-margin, toB=(H-margin)-last.y;
+          const m=Math.min(toL,toR,toT,toB); if(m===toL)last.x=margin; if(m===toR)last.x=W-margin; if(m===toT)last.y=margin; if(m===toB)last.y=H-margin;
+          return pts;
+        }
+        
+        function draw(){
+          const W = mount.clientWidth || window.innerWidth;
+          const H = mount.clientHeight || window.innerHeight;
+          const {svg,LAYER_BRANCH,LAYER_MAIN,LAYER_PULSE,LAYER_SOMA} = buildSVG(W,H);
+        
+          // somas
+          const somas=[];
+          for(let i=0;i<CFG.somaCount;i++){
+            const cx=R(90,W-90), cy=R(90,H-90);
+            const soma=document.createElementNS(svg.namespaceURI,'path');
+            soma.setAttribute('d',somaPath(cx,cy,R(18,28),Math.floor(R(5,8)),.38));
+            soma.setAttribute('class','soma'); LAYER_SOMA.appendChild(soma);
+            const core=document.createElementNS(svg.namespaceURI,'path');
+            core.setAttribute('d',somaPath(cx,cy,R(12,18),Math.floor(R(7,10)),.55));
+            core.setAttribute('class','soma-core'); LAYER_SOMA.appendChild(core);
+            somas.push({x:cx,y:cy});
+          }
+        
+          // main fibers
+          const allBackbones=[];
+          somas.forEach(o=>{
+            const count = CFG.minWalks + (Math.random()<CFG.extraWalkProb?1:0);
+            const angs = angles(count, Math.PI/5);
+            angs.forEach(a=>{
+              const bb = toEdge(W,H,o,CFG.step,CFG.jitter,a,CFG.maxMain,CFG.margin);
+              allBackbones.push(bb);
+        
+              const outer=document.createElementNS(svg.namespaceURI,'path');
+              outer.setAttribute('d',ribbon(bb,R(2,4),R(.8,1.2)));
+              outer.setAttribute('class','fiber'); LAYER_MAIN.appendChild(outer);
+        
+              const inner=document.createElementNS(svg.namespaceURI,'path');
+              inner.setAttribute('d',ribbon(bb,R(1,2),R(.6,.8)));
+              inner.setAttribute('class','fiber inner'); LAYER_MAIN.appendChild(inner);
+        
+              const pulse=document.createElementNS(svg.namespaceURI,'path');
+              pulse.setAttribute('d',smoothD(bb));
+              pulse.setAttribute('class','pulsePath');
+              pulse.style.animationDuration = CFG.pulseSec+'s';
+              LAYER_PULSE.appendChild(pulse);
+            });
+          });
+        
+          // branches
+          function pickAnchor(bb){
+            const i=Math.floor(R(2, Math.min(bb.length-4, bb.length*0.7)));
+            return {anchor:bb[i], prev:bb[i-1]};
+          }
+          for(let k=0;k<CFG.branches;k++){
+            const bb=allBackbones[Math.floor(Math.random()*allBackbones.length)];
+            const {anchor,prev}=pickAnchor(bb);
+            const pts=branchToEdge(W,H,anchor,prev,CFG.maxBranch,CFG.margin);
+        
+            const o=document.createElementNS(svg.namespaceURI,'path');
+            o.setAttribute('d',ribbon(pts,R(4,5.5),R(.5,1))); o.setAttribute('class','fiber'); LAYER_BRANCH.appendChild(o);
+            const i=document.createElementNS(svg.namespaceURI,'path');
+            i.setAttribute('d',ribbon(pts,R(3,4),R(.3,.7))); i.setAttribute('class','fiber inner'); LAYER_BRANCH.appendChild(i);
+        
+            const p=document.createElementNS(svg.namespaceURI,'path');
+            p.setAttribute('d',smoothD(pts)); p.setAttribute('class','pulsePath');
+            p.style.animationDuration=(CFG.pulseSec*.9)+'s'; LAYER_PULSE.appendChild(p);
+          }
+        }
+        
+        let raf; const onResize=()=>{ cancelAnimationFrame(raf); raf=requestAnimationFrame(draw); };
+        window.addEventListener('resize', onResize, {passive:true});
+        draw();
+        /* === /Neuron background === */
+        </script>
+
 </body>
 </html>
