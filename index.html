@@ -30,12 +30,49 @@
     content:""; position:absolute; inset:0; pointer-events:none;
     box-shadow: inset 0 0 200px 120px rgba(0,0,0,.6); z-index:0;
   }
-  .profile-img img {
-   width: 100%;
-   height: 100%;
-   object-fit: cover;
-   border-radius: 50%;
- }
+  .profile-img {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  clip-path: polygon(
+    25% 5%, 75% 5%, 
+    100% 50%, 75% 95%, 
+    25% 95%, 0% 50%
+  );
+  overflow: hidden;
+  background: #0b0f14;
+  border: 3px solid #1da6a6;
+  box-shadow: 0 0 15px rgba(78,205,196,0.5);
+}
+
+/* Outer rotating dashed ring */
+.profile-img::before,
+.profile-img::after {
+  content: '';
+  position: absolute;
+  clip-path: inherit; /* keeps it in hexagon shape */
+  top: -8px; left: -8px; right: -8px; bottom: -8px;
+  border: 2px dashed rgba(78,205,196,0.6);
+  animation: spin 12s linear infinite;
+}
+
+.profile-img::after {
+  top: -14px; left: -14px; right: -14px; bottom: -14px;
+  border: 1px solid rgba(78,205,196,0.3);
+  animation-direction: reverse;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Keep your image proportional inside */
+.profile-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 
   .header::before{
     content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
