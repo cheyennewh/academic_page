@@ -239,7 +239,7 @@ function showSection(e, id){
 (() => {
   const mount = document.getElementById('neuron-header-bg');
   const NEON='#14e6ff', SOFT='#7ffaff', PULSE='#fff';
-  const CFG = { somaCount: 3, minWalks: 3, extraWalkProb:.25,
+  const CFG = { somaCount: 8, minWalks: 5, extraWalkProb:.25,
                 step: 28, jitter: Math.PI/6, branches: 8, pulseSec: 5,
                 margin: 6, maxMain: 160, maxBranch: 110 };
   const R = (a,b)=>a+(b-a)*Math.random();
