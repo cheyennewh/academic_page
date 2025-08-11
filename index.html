@@ -198,11 +198,10 @@ body{ background:var(--bg); }
       <p class="title">Cognitive Scientist</p>
       <p>Columbia University - Psychology Department</p>
       <div class="social-links" style="margin-top:1rem">
-        <!-- Gmail compose link -->
-        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=cdw2147@columbia.edu&su=Hello%20Chey"
-           title="Email"
-           aria-label="Email Chey"
-           target="_blank" rel="noopener">
+        <a href="#" 
+           id="email-link" 
+           title="Email" 
+           aria-label="Email Chey">
           <i class="fas fa-envelope"></i>
         </a>
       
@@ -481,6 +480,23 @@ function showSection(e, id){
   // Draw once (deterministic). No redraw on resize.
   drawHeader();
 })();
+
+ document.getElementById("email-link").addEventListener("click", function(e) {
+  e.preventDefault();
+
+  const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&to=cdw2147@columbia.edu&su=Hello%20Chey";
+  const mailtoUrl = "mailto:cdw2147@columbia.edu?subject=Hello%20Chey";
+
+  // Try Gmail
+  const win = window.open(gmailUrl, "_blank");
+
+  // If popup blocked or Gmail not accessible, fallback
+  setTimeout(() => {
+    if (!win || win.closed || typeof win.closed === "undefined") {
+      window.location.href = mailtoUrl;
+    }
+  }, 500);
+});
 </script>
 </body>
 </html>
