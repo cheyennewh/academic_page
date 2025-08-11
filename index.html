@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Name - Cognitive Neuroscience Researcher</title>
+    <title>Chey Wakeland-Hart - Cognitive Scientist</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -47,8 +47,6 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="rgba(255,255,255,0.1)" points="0,0 1000,300 1000,1000 0,700"/></svg>');
-            background-size: cover;
         }
 
         .profile-content {
@@ -68,6 +66,24 @@
             justify-content: center;
             font-size: 3rem;
             color: #999;
+        }/* dynamic background mount */
+        /* dynamic background mount */
+        .neuron-bg{
+          position: fixed;
+          inset: 0;
+          z-index: -1;          
+          pointer-events: none;
+          overflow: hidden;
+        }
+        .neuron-bg svg{
+          width: 100%;
+          height: 100%;
+          display: block;
+          opacity: .35;         
+        }
+        
+        @media (prefers-reduced-motion: reduce){
+          #neuron-bg .pulsePath{ animation-duration: 12s !important; }
         }
 
         .name {
