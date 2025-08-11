@@ -36,8 +36,8 @@
   .header .blur-overlay{
     position:absolute; inset:0; z-index:0; pointer-events:none;
     background: rgba(20,22,28,.4);
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     border-bottom: 1px solid rgba(255,255,255,.04);
   }
 
@@ -104,11 +104,12 @@
     <!-- your header text/content stays on top -->
     <div class="profile-content">
       <div class="profile-img"><i class="fas fa-user"></i></div>
-      <h1 class="name">Your Name</h1>
-      <p class="title">Doctoral Researcher in Cognitive Neuroscience</p>
-      <p>Columbia University Psychology Department</p>
+      <h1 class="name">Chey</h1>
+      <p class="title">Cognitive Scientist</p>
+      <p>Columbia University</p>
+      <p>Psychology Department</p>
       <div class="social-links" style="margin-top:1rem">
-        <a href="mailto:your.email@columbia.edu" title="Email"><i class="fas fa-envelope"></i></a>
+        <a href="mailto:cdw2147@columbia.edu" title="Email"><i class="fas fa-envelope"></i></a>
         <a href="#" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
         <a href="#" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a>
         <a href="#" title="ORCID"><i class="fab fa-orcid"></i></a>
@@ -128,8 +129,8 @@
 
   <main class="content">
     <section id="about" class="section active">
-      <h2>About Me</h2>
-      <p>…your copy…</p>
+      <h2>About </h2>
+      <p> I'm a cognitive scientist interested in why we remember what we do. My research focuses on understanding why certain things stick in our memory while others fade and how these processes unfold in the brain. Over eight years in memory research, I've developed expertise in large-scale web studies and in-lab experimentation (tDCS, eye-tracking). Much of my current work involves collecting large-sample behavioral data, which I wrangle with Python, R, and MATLAB using advanced statistical and modeling techniques to make sense of these complex patterns in human memory.</p>
       <a href="#" class="btn">Download CV</a>
     </section>
     <!-- other sections… -->
@@ -150,7 +151,7 @@ function showSection(e, id){
    =========================== */
 (() => {
   // 1) Seed handling
-  const DEFAULT_SEED = 133742; // change me
+  const DEFAULT_SEED = 666; // change me
   const urlSeed = Number(new URLSearchParams(location.search).get('seed'));
   const SEED = Number.isFinite(urlSeed) ? urlSeed : DEFAULT_SEED;
 
