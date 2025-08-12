@@ -329,7 +329,7 @@ function showSection(e, id){
     const R = (a,b)=>a + (b-a)*rand();
 
     const NEON='#14e6ff', SOFT='#7ffaff', PULSE='#fff';
-    const CFG = { somaCount: 10, minWalks: 6, extraWalkProb:.25,
+    const CFG = { somaCount: 10, minWalks: 4, extraWalkProb:.25,
                   step: 28, jitter: Math.PI/6, branches: 12, pulseSec: 5,
                   margin: 10, maxMain: 200, maxBranch: 120 };
 
@@ -517,7 +517,7 @@ function showSection(e, id){
 
   // on load: use ?seed= or fallback
   const params = new URLSearchParams(location.search);
-  const initial = Number(params.get('seed')) || 6166;
+  const initial = Number(params.get('seed')) || 166;
   window.renderNeurons(initial);
 })();
  document.getElementById("email-link").addEventListener("click", function(e) {
