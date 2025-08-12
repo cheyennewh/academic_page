@@ -47,20 +47,7 @@
 
 /* Outer rotating dashed ring */
 .profile-img::before,
-.profile-img::after {
-  content: '';
-  position: absolute;
-  clip-path: inherit; /* keeps it in hexagon shape */
-  top: -8px; left: -8px; right: -8px; bottom: -8px;
-  border: 2px dashed rgba(78,205,196,0.6);
-  animation: spin 12s linear infinite;
-}
 
-.profile-img::after {
-  top: -10px; left: -10px; right: -10px; bottom: -10px;
-  border: 1px solid rgba(78,205,196,0.3);
-  animation-direction: reverse;
-}
 
 @keyframes spin {
   to { transform: rotate(360deg); }
