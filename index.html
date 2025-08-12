@@ -68,8 +68,8 @@
 
 /* Keep your image proportional inside */
 .profile-img img {
-  width: 100%;
-  height: 100%;
+  width: 120%;
+  height: 120%;
   object-fit: cover;
 }
 
@@ -153,7 +153,7 @@
   --tabBg:#121820;            /* tabs bar background */
   --panel: rgba(255,255,255,0.95);        
 
-  --teal:#1da6a6;             /* accents pulled from image */
+  --teal:#1da6a6;            
   --cyan:#4ecdc4;
   --accentGrad: linear-gradient(135deg, #1da6a6, #4ecdc4);
 }
@@ -189,7 +189,7 @@ body{ background:var(--bg); }
   box-shadow: 0 0 12px rgba(78,205,196,.35) inset, 0 0 10px rgba(78,205,196,.25);
 }
 
-/* TABS / TOGGLE BAR */
+/* TABS + TOGGLE BAR */
 .nav{
   background: var(--tabBg);
   border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -199,18 +199,16 @@ body{ background:var(--bg); }
 }
 .nav a:hover,
 .nav a.active{
-  color:#0b0f14;             /* readable on the gradient */
+  color:#0b0f14;             
   background: var(--accentGrad);
 }
 .nav a::after{
   background: var(--accentGrad);
 }
-
-/* Section headings use the same accent */
+\
 .section h2{ color:#22303a; }
 .section h2::after{ background: var(--accentGrad); }
 
-/* Cards: a touch cooler border to tie with header */
 .research-item,.teaching-item,.presentation-item{
   border-left:5px solid #1da6a6;
 }
@@ -313,7 +311,7 @@ function showSection(e, id){
    =========================== */
 (() => {
   // 1) Seed handling
-  const DEFAULT_SEED = 166; // change me
+  const DEFAULT_SEED = 6; // change me
   const urlSeed = Number(new URLSearchParams(location.search).get('seed'));
   const SEED = Number.isFinite(urlSeed) ? urlSeed : DEFAULT_SEED;
 
