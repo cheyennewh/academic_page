@@ -517,7 +517,7 @@ function showSection(e, id){
 
   // on load: use ?seed= or fallback
   const params = new URLSearchParams(location.search);
-  const initial = Number(params.get('seed')) || 1666;
+  const initial = Number(params.get('seed')) || 666;
   window.renderNeurons(initial);
 })();
  document.getElementById("email-link").addEventListener("click", function(e) {
