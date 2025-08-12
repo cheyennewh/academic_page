@@ -311,166 +311,155 @@ function showSection(e, id){
 /* ===========================
    Seeded Neuron Header SVG
    =========================== */
-(() => {
-  // 1) Seed handling
-  const DEFAULT_SEED = 6; // change me
-  const urlSeed = Number(new URLSearchParams(location.search).get('seed'));
-  const SEED = Number.isFinite(urlSeed) ? urlSeed : DEFAULT_SEED;
-
-  // Mulberry32 PRNG
-  function mulberry32(seed){
-    let t = seed >>> 0;
-    return function(){
-      t += 0x6D2B79F5;
-      let x = Math.imul(t ^ (t >>> 15), 1 | t);
-      x ^= x + Math.imul(x ^ (x >>> 7), 61 | x);
-      return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-  const rand = mulberry32(SEED);
-  const R = (a,b)=>a + (b-a)*rand();
-
-  // Fixed virtual canvas so drawing stays identical; SVG scales to header
+(function(){
   const VW = 1200, VH = 420;
-
   const mount = document.getElementById('neuron-header-bg');
-  const NEON='#14e6ff', SOFT='#7ffaff', PULSE='#fff';
-  const CFG = { somaCount: 10, minWalks: 4, extraWalkProb:.25,
-                step: 28, jitter: Math.PI/6, branches: 12, pulseSec: 5,
-                margin: 10, maxMain: 180, maxBranch: 200 };
 
-  function buildSVG(){
-    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
-    svg.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
-    svg.setAttribute('preserveAspectRatio','xMidYMid slice');
-    svg.innerHTML = `
-      <defs>
-        <filter id="glow-soft" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="4" result="b1"/><feMerge>
-            <feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <filter id="glow-strong" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="5" result="b1"/>
-          <feGaussianBlur stdDeviation="10" result="b2"/><feMerge>
-            <feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-        <filter id="glow-pulse" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="2" result="b1"/><feMerge>
-            <feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <g id="branches"></g><g id="main"></g><g id="pulses"></g><g id="somas"></g>
-      <style>
-        .soma{fill:${NEON};opacity:1;filter:url(#glow-strong)}
-        .soma-core{fill:${NEON};opacity:1;filter:url(#glow-soft)}
-        .fiber{fill:${NEON};opacity:.85;filter:url(#glow-soft)}
-        .fiber.inner{fill:${SOFT};opacity:.7}
-        .pulsePath{
-          stroke:${PULSE}; stroke-width:2; fill:none; stroke-linecap:round;
-          stroke-dasharray:120 720; animation:flow ${CFG.pulseSec}s linear infinite;
-          filter:url(#glow-pulse); opacity:.85; mix-blend-mode:screen;
-        }
-        @keyframes flow{from{stroke-dashoffset:0} to{stroke-dashoffset:-840}}
-      </style>`;
-    mount.innerHTML=''; mount.appendChild(svg);
-    return {
-      svg,
-      LAYER_BRANCH: svg.querySelector('#branches'),
-      LAYER_MAIN:   svg.querySelector('#main'),
-      LAYER_PULSE:  svg.querySelector('#pulses'),
-      LAYER_SOMA:   svg.querySelector('#somas')
-    };
-  }
+  // one public function
+  window.renderNeurons = function(seed){
+    // ---- PRNG (Mulberry32) ----
+    function mulberry32(s){ let t = s>>>0; return function(){
+      t += 0x6D2B79F5;
+      let x = Math.imul(t ^ (t>>>15), 1 | t);
+      x ^= x + Math.imul(x ^ (x>>>7), 61 | x);
+      return ((x ^ (x>>>14)) >>> 0) / 4294967296;
+    };}
 
-  const inB=(x,y,m)=>x>m&&x<VW-m&&y>m&&y<VH-m;
-  const stepFn=(x,y,a,l)=>({x:Math.max(CFG.margin,Math.min(VW-CFG.margin,x+Math.cos(a)*l)),
-                            y:Math.max(CFG.margin,Math.min(VH-CFG.margin,y+Math.sin(a)*l))});
-  function angles(n,sep=Math.PI/6){
-    const out=[]; let tries=0;
-    while(out.length<n && tries<1000){
-      const a=rand()*Math.PI*2;
-      if(out.every(b => Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))>=sep)) out.push(a);
-      tries++;
-    }
-    return out;
-  }
+    const rand = mulberry32(+seed || 1);
+    const R = (a,b)=>a + (b-a)*rand();
 
-  function somaPath(cx,cy,baseR=20,arms=8,irr=.5){
-    const P=[]; for(let i=0;i<arms;i++){
-      const a=i/arms*2*Math.PI + R(-.12,.12);
-      const r=baseR*(1+R(-irr,irr));
-      P.push([cx+Math.cos(a)*r, cy+Math.sin(a)*r]);
-    }
-    const d=[]; for(let i=0;i<P.length;i++){
-      const p0=P[(i-1+P.length)%P.length],p1=P[i],p2=P[(i+1)%P.length],p3=P[(i+2)%P.length];
-      if(i===0) d.push(`M${p1[0]},${p1[1]}`);
-      const c1x=p1[0]+(p2[0]-p0[0])/6, c1y=p1[1]+(p2[1]-p0[1])/6;
-      const c2x=p2[0]-(p3[0]-p1[0])/6, c2y=p2[1]-(p3[1]-p1[1])/6;
-      d.push(`C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`);
-    }
-    d.push('Z'); return d.join(' ');
-  }
-  function ribbon(pts,w0=3,w1=.9){
-    if(pts.length<2) return '';
-    const L=[],Rr=[];
-    for(let i=0;i<pts.length;i++){
-      const p=pts[i],pr=pts[i-1]||p,nx=pts[i+1]||p,vx=nx.x-pr.x,vy=nx.y-pr.y,len=Math.hypot(vx,vy)||1;
-      const nX=-vy/len,nY=vx/len, t=i/(pts.length-1), w=w0*(1-t)+w1*t;
-      L.push([p.x+nX*w, p.y+nY*w]); Rr.push([p.x-nX*w, p.y-nY*w]);
-    }
-    const all=L.concat(Rr.reverse()); let d=`M${all[0][0]},${all[0][1]}`;
-    for(let i=1;i<all.length;i++) d+=` L${all[i][0]},${all[i][1]}`; return d+' Z';
-  }
-  function smoothD(pts){
-    if(pts.length<2) return '';
-    let d=`M${pts[0].x},${pts[0].y}`;
-    for(let i=1;i<pts.length-1;i++){
-      const p1=pts[i],p2=pts[i+1],mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;
-      d+=` Q ${p1.x},${p1.y} ${mx},${my}`;
-    }
-    return d;
-  }
+    const NEON='#14e6ff', SOFT='#7ffaff', PULSE='#fff';
+    const CFG = { somaCount: 6, minWalks: 4, extraWalkProb:.25,
+                  step: 28, jitter: Math.PI/6, branches: 12, pulseSec: 5,
+                  margin: 10, maxMain: 180, maxBranch: 120 };
 
-  function toEdge(origin,step,jitter,startA,maxSteps){
-    let {x,y}=origin, a=(startA==null)?rand()*Math.PI*2:startA;
-    const pts=[{x,y}], bias=Math.atan2(y<VH/2?-1:1, x<VW/2?-1:1); a=(a*3+bias)/4;
-    let s=0;
-    while(inB(x,y,CFG.margin) && s<maxSteps){
-      a += R(-jitter,jitter);
-      const p=stepFn(x,y,a,step); x=p.x; y=p.y; pts.push({x,y}); s++;
-      if(!inB(x,y,CFG.margin)) break;
+    function buildSVG(){
+      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('viewBox',`0 0 ${VW} ${VH}`);
+      svg.setAttribute('preserveAspectRatio','xMidYMid slice');
+      svg.innerHTML = `
+        <defs>
+          <filter id="glow-soft" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="4" result="b1"/><feMerge>
+              <feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-strong" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="5" result="b1"/>
+            <feGaussianBlur stdDeviation="10" result="b2"/><feMerge>
+              <feMergeNode in="b2"/><feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="glow-pulse" x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur stdDeviation="2" result="b1"/><feMerge>
+              <feMergeNode in="b1"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <g id="branches"></g><g id="main"></g><g id="pulses"></g><g id="somas"></g>
+        <style>
+          .soma{fill:${NEON};opacity:1;filter:url(#glow-strong)}
+          .soma-core{fill:${NEON};opacity:1;filter:url(#glow-soft)}
+          .fiber{fill:${NEON};opacity:.85;filter:url(#glow-soft)}
+          .fiber.inner{fill:${SOFT};opacity:.7}
+          .pulsePath{
+            stroke:${PULSE}; stroke-width:2; fill:none; stroke-linecap:round;
+            stroke-dasharray:120 720; animation:flow ${CFG.pulseSec}s linear infinite;
+            filter:url(#glow-pulse); opacity:.85; mix-blend-mode:screen;
+          }
+          @keyframes flow{from{stroke-dashoffset:0} to{stroke-dashoffset:-840}}
+        </style>`;
+      mount.innerHTML=''; mount.appendChild(svg);
+      return {
+        svg,
+        LAYER_BRANCH: svg.querySelector('#branches'),
+        LAYER_MAIN:   svg.querySelector('#main'),
+        LAYER_PULSE:  svg.querySelector('#pulses'),
+        LAYER_SOMA:   svg.querySelector('#somas')
+      };
     }
-    // snap final point to nearest edge to complete the span
-    const last=pts[pts.length-1], toL=last.x-CFG.margin, toR=(VW-CFG.margin)-last.x,
-          toT=last.y-CFG.margin, toB=(VH-CFG.margin)-last.y;
-    const m=Math.min(toL,toR,toT,toB);
-    if(m===toL) last.x=CFG.margin;
-    if(m===toR) last.x=VW-CFG.margin;
-    if(m===toT) last.y=CFG.margin;
-    if(m===toB) last.y=VH-CFG.margin;
-    return pts;
-  }
 
-  function branchToEdge(anchor,prev,maxSteps){
-    const st=R(14,20), jit=Math.PI/8, dx=anchor.x-(prev?.x??anchor.x), dy=anchor.y-(prev?.y??anchor.y);
-    let a=Math.atan2(dy,dx) + (rand()<.5?1:-1)*(Math.PI/2+R(-.6,.6));
-    const bias=Math.atan2(anchor.y<VH/2?-1:1, anchor.x<VW/2?-1:1); a=(a*3+bias)/4;
-    let x=anchor.x,y=anchor.y, pts=[{x,y}], s=0;
-    while(inB(x,y,CFG.margin) && s<maxSteps){
-      a += R(-jit,jit); const p=stepFn(x,y,a,st); x=p.x; y=p.y; pts.push({x,y}); s++;
-      if(!inB(x,y,CFG.margin)) break;
+    const inB=(x,y,m)=>x>m&&x<VW-m&&y>m&&y<VH-m;
+    const stepFn=(x,y,a,l)=>({x:Math.max(CFG.margin,Math.min(VW-CFG.margin,x+Math.cos(a)*l)),
+                              y:Math.max(CFG.margin,Math.min(VH-CFG.margin,y+Math.sin(a)*l))});
+    function angles(n,sep=Math.PI/6){
+      const out=[]; let tries=0;
+      while(out.length<n && tries<1000){
+        const a=rand()*Math.PI*2;
+        if(out.every(b => Math.abs(Math.atan2(Math.sin(a-b),Math.cos(a-b)))>=sep)) out.push(a);
+        tries++;
+      }
+      return out;
     }
-    const last=pts[pts.length-1], toL=last.x-CFG.margin, toR=(VW-CFG.margin)-last.x,
-          toT=last.y-CFG.margin, toB=(VH-CFG.margin)-last.y;
-    const m=Math.min(toL,toR,toT,toB);
-    if(m===toL) last.x=CFG.margin;
-    if(m===toR) last.x=VW-CFG.margin;
-    if(m===toT) last.y=CFG.margin;
-    if(m===toB) last.y=VH-CFG.margin;
-    return pts;
-  }
+    function somaPath(cx,cy,baseR=20,arms=8,irr=.5){
+      const P=[]; for(let i=0;i<arms;i++){
+        const a=i/arms*2*Math.PI + R(-.12,.12);
+        const r=baseR*(1+R(-irr,irr));
+        P.push([cx+Math.cos(a)*r, cy+Math.sin(a)*r]);
+      }
+      const d=[]; for(let i=0;i<P.length;i++){
+        const p0=P[(i-1+P.length)%P.length],p1=P[i],p2=P[(i+1)%P.length],p3=P[(i+2)%P.length];
+        if(i===0) d.push(`M${p1[0]},${p1[1]}`);
+        const c1x=p1[0]+(p2[0]-p0[0])/6, c1y=p1[1]+(p2[1]-p0[1])/6;
+        const c2x=p2[0]-(p3[0]-p1[0])/6, c2y=p2[1]-(p3[1]-p1[1])/6;
+        d.push(`C${c1x},${c1y} ${c2x},${c2y} ${p2[0]},${p2[1]}`);
+      }
+      d.push('Z'); return d.join(' ');
+    }
+    function ribbon(pts,w0=3,w1=.9){
+      if(pts.length<2) return '';
+      const L=[],Rr=[];
+      for(let i=0;i<pts.length;i++){
+        const p=pts[i],pr=pts[i-1]||p,nx=pts[i+1]||p,vx=nx.x-pr.x,vy=nx.y-pr.y,len=Math.hypot(vx,vy)||1;
+        const nX=-vy/len,nY=vx/len, t=i/(pts.length-1), w=w0*(1-t)+w1*t;
+        L.push([p.x+nX*w, p.y+nY*w]); Rr.push([p.x-nX*w, p.y-nY*w]);
+      }
+      const all=L.concat(Rr.reverse()); let d=`M${all[0][0]},${all[0][1]}`;
+      for(let i=1;i<all.length;i++) d+=` L${all[i][0]},${all[i][1]}`; return d+' Z';
+    }
+    function smoothD(pts){
+      if(pts.length<2) return '';
+      let d=`M${pts[0].x},${pts[0].y}`;
+      for(let i=1;i<pts.length-1;i++){
+        const p1=pts[i],p2=pts[i+1],mx=(p1.x+p2.x)/2,my=(p1.y+p2.y)/2;
+        d+=` Q ${p1.x},${p1.y} ${mx},${my}`;
+      }
+      return d;
+    }
+    function toEdge(origin,step,jitter,startA,maxSteps){
+      let {x,y}=origin, a=(startA==null)?rand()*Math.PI*2:startA;
+      const pts=[{x,y}], bias=Math.atan2(y<VH/2?-1:1, x<VW/2?-1:1); a=(a*3+bias)/4;
+      let s=0;
+      while(inB(x,y,CFG.margin) && s<maxSteps){
+        a += R(-jitter,jitter);
+        const p=stepFn(x,y,a,step); x=p.x; y=p.y; pts.push({x,y}); s++;
+        if(!inB(x,y,CFG.margin)) break;
+      }
+      const last=pts[pts.length-1], toL=last.x-CFG.margin, toR=(VW-CFG.margin)-last.x,
+            toT=last.y-CFG.margin, toB=(VH-CFG.margin)-last.y;
+      const m=Math.min(toL,toR,toT,toB);
+      if(m===toL) last.x=CFG.margin;
+      if(m===toR) last.x=VW-CFG.margin;
+      if(m===toT) last.y=CFG.margin;
+      if(m===toB) last.y=VH-CFG.margin;
+      return pts;
+    }
+    function branchToEdge(anchor,prev,maxSteps){
+      const st=R(14,20), jit=Math.PI/8, dx=anchor.x-(prev?.x??anchor.x), dy=anchor.y-(prev?.y??anchor.y);
+      let a=Math.atan2(dy,dx) + (rand()<.5?1:-1)*(Math.PI/2+R(-.6,.6));
+      const bias=Math.atan2(anchor.y<VH/2?-1:1, anchor.x<VW/2?-1:1); a=(a*3+bias)/4;
+      let x=anchor.x,y=anchor.y, pts=[{x,y}], s=0;
+      while(inB(x,y,CFG.margin) && s<maxSteps){
+        a += R(-jit,jit); const p=stepFn(x,y,a,st); x=p.x; y=p.y; pts.push({x,y}); s++;
+        if(!inB(x,y,CFG.margin)) break;
+      }
+      const last=pts[pts.length-1], toL=last.x-CFG.margin, toR=(VW-CFG.margin)-last.x,
+            toT=last.y-CFG.margin, toB=(VH-CFG.margin)-last.y;
+      const m=Math.min(toL,toR,toT,toB);
+      if(m===toL) last.x=CFG.margin;
+      if(m===toR) last.x=VW-CFG.margin;
+      if(m===toT) last.y=CFG.margin;
+      if(m===toB) last.y=VH-CFG.margin;
+      return pts;
+    }
 
-  function drawHeader(){
     const {svg,LAYER_BRANCH,LAYER_MAIN,LAYER_PULSE,LAYER_SOMA} = buildSVG();
 
     // somas
@@ -522,12 +511,15 @@ function showSection(e, id){
       p.setAttribute('d',smoothD(pts)); p.setAttribute('class','pulsePath');
       p.style.animationDuration=(CFG.pulseSec*.9)+'s'; LAYER_PULSE.appendChild(p);
     }
-  }
 
-  // Draw once (deterministic). No redraw on resize.
-  drawHeader();
+    console.log('Neuron seed:', seed);
+  };
+
+  // on load: use ?seed= or fallback
+  const params = new URLSearchParams(location.search);
+  const initial = Number(params.get('seed')) || 666;
+  window.renderNeurons(initial);
 })();
-
  document.getElementById("email-link").addEventListener("click", function(e) {
   e.preventDefault();
 
