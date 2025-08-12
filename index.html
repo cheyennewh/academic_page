@@ -53,26 +53,6 @@
   border-radius:0 !important;        /* kill old circle radius */
 }
 
-/* rotating circuit rings */
-.profile-img::before,
-.profile-img::after{
-  content:"";
-  position:absolute; inset:-10px;
-  clip-path:inherit; -webkit-clip-path:inherit;
-  pointer-events:none;
-}
-.profile-img::before{
-  border:2px dashed rgba(78,205,196,.6);
-  animation:spin 12s linear infinite;
-}
-.profile-img::after{
-  inset:-16px;
-  border:1px solid rgba(78,205,196,.3);
-  animation:spin 16s linear infinite reverse;
-}
-
-
-
   .header::before{
     content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
     opacity:.05; mix-blend-mode:overlay;
