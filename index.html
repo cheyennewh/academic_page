@@ -47,7 +47,22 @@
 
 /* Outer rotating dashed ring */
 .profile-img::before,
-
+.profile-img::after{
+  content:"";
+  position:absolute; inset:-10px;
+  clip-path: inherit; -webkit-clip-path: inherit;
+  pointer-events:none;
+}
+.profile-img::before{
+  border:2px dashed rgba(78,205,196,.6);
+  animation:spin 12s linear infinite;
+}
+.profile-img::after{
+  inset:-16px;
+  border:1px solid rgba(78,205,196,.3);
+  animation:spin 16s linear infinite reverse;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 @keyframes spin {
   to { transform: rotate(360deg); }
@@ -55,8 +70,8 @@
 
 /* Keep your image proportional inside */
 .profile-img img {
-  width: 110%;
-  height: 110%;
+  width: 120%;
+  height: 120%;
   object-fit: cover;
 }
 
