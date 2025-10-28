@@ -17,8 +17,16 @@
   body, .content {
     font-family: 'Inter', sans-serif;
   }
-  
   .header{
+    background:
+      radial-gradient(1200px 600px at 10% 20%, #1b1e26 0%, transparent 60%),
+      radial-gradient(900px 500px at 85% 30%, #0f1116 0%, transparent 55%),
+      conic-gradient(from 240deg at 60% 60%, #0f1116 0, #171921 30%, #0f1116 60%, #171921 85%, #0f1116 100%),
+      #14161c;
+    color:#fff; padding:3rem 2rem; text-align:center;
+    position:relative; overflow:hidden; isolation:isolate;
+  }
+  .header::after{
     content:""; position:absolute; inset:0; pointer-events:none;
     box-shadow: inset 0 0 200px 120px rgba(0,0,0,.6); z-index:0;
   }
@@ -115,8 +123,7 @@
     .profile-img{width:150px;height:150px}
   }
 
- :root{
-  --bg:#0b0f14;               /* page background */
+ :root{            /* page background */
   --textPrimary:#f2f4f6;      /* header/main light text */
   --textSecondary:#b0bec5;    /* subheads/meta */
   --muted:#9aa7b3;            /* inactive tabs etc. */
@@ -130,7 +137,7 @@
 }
 
 /* page bg */
-body{ background:var(--bg); }
+body{  }
 
 /* container keeps a light glass look */
 .container{
@@ -543,4 +550,3 @@ window.addEventListener('hashchange', () => {
 </script>
 </body>
 </html>
-
